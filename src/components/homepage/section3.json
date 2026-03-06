@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_homepage_section3s",
+  "info": {
+    "displayName": "section3",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "buttonLabel": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "solutions": {
+      "type": "component",
+      "component": "homepage.solutions",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

@@ -1,10 +1,8 @@
 {
-  "collectionName": "components_shared_seos",
+  "collectionName": "components_homepage_services",
   "info": {
-    "name": "Seo",
-    "icon": "allergies",
-    "displayName": "Seo",
-    "description": ""
+    "displayName": "services",
+    "icon": "information"
   },
   "options": {},
   "attributes": {
@@ -15,10 +13,7 @@
     "title": {
       "type": "string",
       "required": true
-    },
-    "description": {
-      "type": "text",
-      "required": true
     }
-  }
+  },
+  "config": {}
 }

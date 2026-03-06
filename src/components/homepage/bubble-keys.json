@@ -5,6 +5,15 @@
     "icon": "information"
   },
   "options": {},
-  "attributes": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "korTitle": {
+      "type": "string",
+      "required": true
+    }
+  },
   "config": {}
 }

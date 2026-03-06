@@ -6,7 +6,10 @@ export interface HomepageBubbleKeys extends Struct.ComponentSchema {
     displayName: 'bubbleKeys';
     icon: 'information';
   };
-  attributes: {};
+  attributes: {
+    korTitle: Schema.Attribute.String & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
 }
 
 export interface HomepageSection2 extends Struct.ComponentSchema {
@@ -18,10 +21,67 @@ export interface HomepageSection2 extends Struct.ComponentSchema {
   attributes: {
     buttonLabel: Schema.Attribute.String;
     description: Schema.Attribute.Text;
-    hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    keyword1: Schema.Attribute.Component<'homepage.bubble-keys', true>;
+    hero: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
+    keywords: Schema.Attribute.Component<'homepage.bubble-keys', true>;
     subTitle: Schema.Attribute.String;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface HomepageSection3 extends Struct.ComponentSchema {
+  collectionName: 'components_homepage_section3s';
+  info: {
+    displayName: 'section3';
+    icon: 'apps';
+  };
+  attributes: {
+    buttonLabel: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    solutions: Schema.Attribute.Component<'homepage.solutions', true>;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface HomepageSection4 extends Struct.ComponentSchema {
+  collectionName: 'components_homepage_section4s';
+  info: {
+    displayName: 'section4';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    services: Schema.Attribute.Component<'homepage.services', true>;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface HomepageServices extends Struct.ComponentSchema {
+  collectionName: 'components_homepage_services';
+  info: {
+    displayName: 'services';
+    icon: 'information';
+  };
+  attributes: {
+    hero: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface HomepageSolutions extends Struct.ComponentSchema {
+  collectionName: 'components_homepage_solutions';
+  info: {
+    displayName: 'solutions';
+    icon: 'information';
+  };
+  attributes: {
+    description: Schema.Attribute.String & Schema.Attribute.Required;
+    hero: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
+    korTitle: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -69,11 +129,10 @@ export interface SharedSeo extends Struct.ComponentSchema {
     name: 'Seo';
   };
   attributes: {
-    metaDescription: Schema.Attribute.Text & Schema.Attribute.Required;
-    metaTitle: Schema.Attribute.String & Schema.Attribute.Required;
-    shareImage: Schema.Attribute.Media<
-      'images' | 'videos' | 'audios' | 'files'
-    >;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    hero: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -94,6 +153,10 @@ declare module '@strapi/strapi' {
     export interface ComponentSchemas {
       'homepage.bubble-keys': HomepageBubbleKeys;
       'homepage.section2': HomepageSection2;
+      'homepage.section3': HomepageSection3;
+      'homepage.section4': HomepageSection4;
+      'homepage.services': HomepageServices;
+      'homepage.solutions': HomepageSolutions;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;

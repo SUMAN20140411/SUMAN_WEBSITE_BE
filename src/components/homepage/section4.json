@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_homepage_section4s",
+  "info": {
+    "displayName": "section4",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "services": {
+      "type": "component",
+      "component": "homepage.services",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

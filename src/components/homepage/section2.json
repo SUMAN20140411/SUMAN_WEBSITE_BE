@@ -6,6 +6,10 @@
   },
   "options": {},
   "attributes": {
+    "hero": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
+    },
     "title": {
       "type": "string"
     },
@@ -18,17 +22,7 @@
     "description": {
       "type": "text"
     },
-    "hero": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
-    "keyword1": {
+    "keywords": {
       "type": "component",
       "component": "homepage.bubble-keys",
       "repeatable": true
