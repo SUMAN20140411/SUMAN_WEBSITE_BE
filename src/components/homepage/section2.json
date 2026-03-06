@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_homepage_section2s",
+  "info": {
+    "displayName": "section2",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "buttonLabel": {
+      "type": "string"
+    },
+    "subTitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "hero": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "keyword1": {
+      "type": "component",
+      "component": "homepage.bubble-keys",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}
