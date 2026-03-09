@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "certification_pages",
+  "info": {
+    "singularName": "certification-page",
+    "pluralName": "certification-pages",
+    "displayName": "CertificationPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {}
+}

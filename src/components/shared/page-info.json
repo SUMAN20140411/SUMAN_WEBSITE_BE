@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_shared_page_infos",
+  "info": {
+    "displayName": "PageInfo",
+    "icon": "information"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "pageLocation": {
+      "type": "string"
+    },
+    "hero": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "ci_pages",
+  "info": {
+    "singularName": "ci-page",
+    "pluralName": "ci-pages",
+    "displayName": "CiPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {}
+}

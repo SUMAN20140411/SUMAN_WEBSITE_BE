@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_shared_info_cards",
+  "info": {
+    "displayName": "infoCard",
+    "icon": "information"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "blocks"
+    }
+  },
+  "config": {}
+}

@@ -85,6 +85,42 @@ export interface HomepageSolutions extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedHeaderItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_header_items';
+  info: {
+    displayName: 'headerItem';
+    icon: 'store';
+  };
+  attributes: {
+    subItems: Schema.Attribute.Component<'shared.header-sub', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedHeaderSub extends Struct.ComponentSchema {
+  collectionName: 'components_shared_header_subs';
+  info: {
+    displayName: 'headerSub';
+    icon: 'dashboard';
+  };
+  attributes: {
+    pageAddress: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedInfoCard extends Struct.ComponentSchema {
+  collectionName: 'components_shared_info_cards';
+  info: {
+    displayName: 'infoCard';
+    icon: 'information';
+  };
+  attributes: {
+    description: Schema.Attribute.Blocks;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedMedia extends Struct.ComponentSchema {
   collectionName: 'components_shared_media';
   info: {
@@ -93,6 +129,20 @@ export interface SharedMedia extends Struct.ComponentSchema {
   };
   attributes: {
     file: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
+  };
+}
+
+export interface SharedPageInfo extends Struct.ComponentSchema {
+  collectionName: 'components_shared_page_infos';
+  info: {
+    displayName: 'PageInfo';
+    icon: 'information';
+  };
+  attributes: {
+    hero: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
+    pageLocation: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -136,6 +186,18 @@ export interface SharedSeo extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedSignature extends Struct.ComponentSchema {
+  collectionName: 'components_shared_signatures';
+  info: {
+    displayName: 'Signature';
+    icon: 'brush';
+  };
+  attributes: {
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    position: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedSlider extends Struct.ComponentSchema {
   collectionName: 'components_shared_sliders';
   info: {
@@ -148,6 +210,59 @@ export interface SharedSlider extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedText extends Struct.ComponentSchema {
+  collectionName: 'components_shared_texts';
+  info: {
+    displayName: 'Text';
+    icon: 'italic';
+  };
+  attributes: {
+    text: Schema.Attribute.Text;
+  };
+}
+
+export interface VisionPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_vision_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    emphasizedSubtitle: Schema.Attribute.String;
+    subsection: Schema.Attribute.Component<'shared.info-card', false>;
+    subtitle: Schema.Attribute.String;
+    targetIncome: Schema.Attribute.String;
+    targetSales: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface VisionPageSection2 extends Struct.ComponentSchema {
+  collectionName: 'components_vision_page_section2s';
+  info: {
+    displayName: 'section2';
+    icon: 'apps';
+  };
+  attributes: {
+    subsection: Schema.Attribute.Component<'shared.info-card', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface VisionPageSection4 extends Struct.ComponentSchema {
+  collectionName: 'components_vision_page_section4s';
+  info: {
+    displayName: 'section4';
+    icon: 'apps';
+  };
+  attributes: {
+    img: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
+    subtitle: Schema.Attribute.Text;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -157,11 +272,20 @@ declare module '@strapi/strapi' {
       'homepage.section4': HomepageSection4;
       'homepage.services': HomepageServices;
       'homepage.solutions': HomepageSolutions;
+      'shared.header-item': SharedHeaderItem;
+      'shared.header-sub': SharedHeaderSub;
+      'shared.info-card': SharedInfoCard;
       'shared.media': SharedMedia;
+      'shared.page-info': SharedPageInfo;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
+      'shared.signature': SharedSignature;
       'shared.slider': SharedSlider;
+      'shared.text': SharedText;
+      'vision-page.section1': VisionPageSection1;
+      'vision-page.section2': VisionPageSection2;
+      'vision-page.section4': VisionPageSection4;
     }
   }
 }

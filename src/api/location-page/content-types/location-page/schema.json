@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "location_pages",
+  "info": {
+    "singularName": "location-page",
+    "pluralName": "location-pages",
+    "displayName": "LocationPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {}
+}

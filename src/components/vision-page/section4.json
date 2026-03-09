@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_vision_page_section4s",
+  "info": {
+    "displayName": "section4",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "subtitle": {
+      "type": "text"
+    },
+    "img": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
+    }
+  },
+  "config": {}
+}

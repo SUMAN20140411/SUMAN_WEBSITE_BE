@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_signatures",
+  "info": {
+    "displayName": "Signature",
+    "icon": "brush"
+  },
+  "options": {},
+  "attributes": {
+    "position": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "organization_pages",
+  "info": {
+    "singularName": "organization-page",
+    "pluralName": "organization-pages",
+    "displayName": "OrganizationPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {}
+}

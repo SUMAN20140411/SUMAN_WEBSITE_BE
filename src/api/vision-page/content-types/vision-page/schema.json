@@ -1,0 +1,69 @@
+{
+  "kind": "singleType",
+  "collectionName": "vision_pages",
+  "info": {
+    "singularName": "vision-page",
+    "pluralName": "vision-pages",
+    "displayName": "VisionPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "pageInfo": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "shared.page-info",
+      "repeatable": false
+    },
+    "section1": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "vision-page.section1",
+      "repeatable": false
+    },
+    "section2": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "vision-page.section2",
+      "repeatable": false
+    },
+    "section3": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "vision-page.section2",
+      "repeatable": false
+    },
+    "section4": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "vision-page.section4",
+      "repeatable": false
+    }
+  }
+}

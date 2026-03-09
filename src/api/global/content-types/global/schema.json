@@ -20,7 +20,11 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images", "files", "videos"]
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ]
     },
     "siteDescription": {
       "type": "text",
@@ -28,8 +32,17 @@
     },
     "defaultSeo": {
       "type": "component",
-      "repeatable": false,
-      "component": "shared.seo"
+      "component": "shared.seo",
+      "repeatable": false
+    },
+    "headerIcon": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
+    },
+    "headerItems": {
+      "type": "component",
+      "component": "shared.header-item",
+      "repeatable": true
     }
   }
 }

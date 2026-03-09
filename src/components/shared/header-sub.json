@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_shared_header_subs",
+  "info": {
+    "displayName": "headerSub",
+    "icon": "dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "pageAddress": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
