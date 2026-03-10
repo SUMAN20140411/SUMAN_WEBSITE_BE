@@ -235,6 +235,51 @@ export interface OrganizationPageOrgChart extends Struct.ComponentSchema {
   };
 }
 
+export interface ServicePageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_service_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    img: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface ServicePageSection2 extends Struct.ComponentSchema {
+  collectionName: 'components_service_page_section2s';
+  info: {
+    displayName: 'section2';
+    icon: 'apps';
+  };
+  attributes: {
+    deviceCategories: Schema.Attribute.Component<
+      'shared.device-category',
+      true
+    >;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface SharedDeviceCategory extends Struct.ComponentSchema {
+  collectionName: 'components_shared_device_categories';
+  info: {
+    displayName: 'deviceCategory';
+    icon: 'dashboard';
+  };
+  attributes: {
+    equipment: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::equipment.equipment'
+    >;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface SharedHeaderItem extends Struct.ComponentSchema {
   collectionName: 'components_shared_header_items';
   info: {
@@ -435,6 +480,9 @@ declare module '@strapi/strapi' {
       'location-page.section1': LocationPageSection1;
       'organization-page.departments': OrganizationPageDepartments;
       'organization-page.org-chart': OrganizationPageOrgChart;
+      'service-page.section1': ServicePageSection1;
+      'service-page.section2': ServicePageSection2;
+      'shared.device-category': SharedDeviceCategory;
       'shared.header-item': SharedHeaderItem;
       'shared.header-sub': SharedHeaderSub;
       'shared.info-card': SharedInfoCard;

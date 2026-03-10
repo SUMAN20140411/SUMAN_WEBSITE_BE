@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_service_page_section1s",
+  "info": {
+    "displayName": "section1",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "img": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
+    }
+  },
+  "config": {}
+}

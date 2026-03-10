@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_device_categories",
+  "info": {
+    "displayName": "deviceCategory",
+    "icon": "dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "equipment": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::equipment.equipment"
+    }
+  },
+  "config": {}
+}

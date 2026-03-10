@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "certificates",
+  "collectionName": "equipments",
   "info": {
-    "singularName": "certificate",
-    "pluralName": "certificates",
-    "displayName": "Certificate"
+    "singularName": "equipment",
+    "pluralName": "equipments",
+    "displayName": "Equipment"
   },
   "options": {
     "draftAndPublish": true
@@ -17,20 +17,16 @@
   "attributes": {
     "name": {
       "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
       "required": true
     },
-    "file": {
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "equipment"
+    },
+    "img": {
       "type": "customField",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
       "customField": "plugin::cloudinary-media-library.cloudinary"
     }
   }
