@@ -917,6 +917,37 @@ export interface ApiLocationPageLocationPage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
+  collectionName: 'locations';
+  info: {
+    displayName: 'Location';
+    pluralName: 'locations';
+    singularName: 'location';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    address: Schema.Attribute.String & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    latitude: Schema.Attribute.Float;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::location.location'
+    > &
+      Schema.Attribute.Private;
+    longitude: Schema.Attribute.Float;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiOrganizationPageOrganizationPage
   extends Struct.SingleTypeSchema {
   collectionName: 'organization_pages';
@@ -1544,6 +1575,7 @@ declare module '@strapi/strapi' {
       'api::history-page.history-page': ApiHistoryPageHistoryPage;
       'api::home-page.home-page': ApiHomePageHomePage;
       'api::location-page.location-page': ApiLocationPageLocationPage;
+      'api::location.location': ApiLocationLocation;
       'api::organization-page.organization-page': ApiOrganizationPageOrganizationPage;
       'api::vision-page.vision-page': ApiVisionPageVisionPage;
       'plugin::content-releases.release': PluginContentReleasesRelease;

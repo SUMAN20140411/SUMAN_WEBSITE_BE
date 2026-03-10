@@ -13,6 +13,9 @@
     "subtitle": {
       "type": "text"
     },
+    "emphasizedSubtitle": {
+      "type": "string"
+    },
     "img": {
       "type": "customField",
       "customField": "plugin::cloudinary-media-library.cloudinary"

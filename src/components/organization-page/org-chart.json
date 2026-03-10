@@ -6,6 +6,13 @@
   },
   "options": {},
   "attributes": {
+    "logo": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
+    },
+    "board": {
+      "type": "string"
+    },
     "ceo": {
       "type": "string"
     },

@@ -11,9 +11,9 @@
       "required": true
     },
     "locations": {
-      "type": "component",
-      "component": "location-page.location-item",
-      "repeatable": true
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::location.location"
     }
   },
   "config": {}

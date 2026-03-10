@@ -14,12 +14,11 @@
       "type": "string",
       "required": true
     },
-    "geoLoc": {
-      "type": "customField",
-      "customField": "plugin::strapi-location-picker.location-picker",
-      "options": {
-        "info": true
-      }
+    "latitude": {
+      "type": "float"
+    },
+    "longitude": {
+      "type": "float"
     }
   },
   "config": {}

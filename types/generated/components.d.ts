@@ -186,13 +186,8 @@ export interface LocationPageLocationItem extends Struct.ComponentSchema {
   };
   attributes: {
     address: Schema.Attribute.String & Schema.Attribute.Required;
-    geoLoc: Schema.Attribute.JSON &
-      Schema.Attribute.CustomField<
-        'plugin::strapi-location-picker.location-picker',
-        {
-          info: true;
-        }
-      >;
+    latitude: Schema.Attribute.Float;
+    longitude: Schema.Attribute.Float;
     name: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -204,7 +199,7 @@ export interface LocationPageSection1 extends Struct.ComponentSchema {
     icon: 'apps';
   };
   attributes: {
-    locations: Schema.Attribute.Component<'location-page.location-item', true>;
+    locations: Schema.Attribute.Relation<'oneToMany', 'api::location.location'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -229,11 +224,14 @@ export interface OrganizationPageOrgChart extends Struct.ComponentSchema {
   };
   attributes: {
     advisor: Schema.Attribute.String;
+    board: Schema.Attribute.String;
     ceo: Schema.Attribute.String;
     departments: Schema.Attribute.Component<
       'organization-page.departments',
       true
     >;
+    logo: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
   };
 }
 
@@ -409,6 +407,7 @@ export interface VisionPageSection4 extends Struct.ComponentSchema {
     icon: 'apps';
   };
   attributes: {
+    emphasizedSubtitle: Schema.Attribute.String;
     img: Schema.Attribute.String &
       Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
     subtitle: Schema.Attribute.Text;
