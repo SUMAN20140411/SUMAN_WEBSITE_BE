@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_certification_page_section1s",
+  "info": {
+    "displayName": "section1",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "keywords": {
+      "type": "component",
+      "component": "shared.quote",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

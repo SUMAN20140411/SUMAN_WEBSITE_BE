@@ -14,5 +14,26 @@
       "localized": true
     }
   },
-  "attributes": {}
+  "attributes": {
+    "pageInfo": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "shared.page-info",
+      "repeatable": false
+    },
+    "orgChart": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "organization-page.org-chart",
+      "repeatable": false
+    }
+  }
 }

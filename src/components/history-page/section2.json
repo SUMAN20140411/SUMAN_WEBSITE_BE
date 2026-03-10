@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_history_page_section2s",
+  "info": {
+    "displayName": "section2"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "historyList": {
+      "type": "component",
+      "component": "history-page.history-list",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

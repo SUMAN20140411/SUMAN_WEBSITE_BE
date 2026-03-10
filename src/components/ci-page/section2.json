@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_ci_page_section2s",
+  "info": {
+    "displayName": "section2",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "logoFiles": {
+      "type": "component",
+      "component": "shared.media",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

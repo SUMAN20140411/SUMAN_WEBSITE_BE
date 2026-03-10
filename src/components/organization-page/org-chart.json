@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_organization_page_org_charts",
+  "info": {
+    "displayName": "orgChart",
+    "icon": "cog"
+  },
+  "options": {},
+  "attributes": {
+    "ceo": {
+      "type": "string"
+    },
+    "advisor": {
+      "type": "string"
+    },
+    "departments": {
+      "type": "component",
+      "component": "organization-page.departments",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

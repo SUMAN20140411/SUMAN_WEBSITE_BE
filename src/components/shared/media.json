@@ -7,9 +7,8 @@
   "options": {},
   "attributes": {
     "file": {
-      "allowedTypes": ["images", "files", "videos"],
-      "type": "media",
-      "multiple": false
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
     }
   }
 }

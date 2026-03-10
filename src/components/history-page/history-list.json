@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_history_page_history_lists",
+  "info": {
+    "displayName": "historyList",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "period": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    }
+  },
+  "config": {}
+}

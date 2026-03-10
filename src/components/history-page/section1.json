@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_history_page_section1s",
+  "info": {
+    "displayName": "section1",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "text",
+      "required": true
+    },
+    "keywords": {
+      "type": "component",
+      "component": "shared.quote",
+      "repeatable": true
+    },
+    "sales": {
+      "type": "string",
+      "default": "sales"
+    },
+    "worker": {
+      "type": "string"
+    },
+    "hero": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
+    }
+  },
+  "config": {}
+}

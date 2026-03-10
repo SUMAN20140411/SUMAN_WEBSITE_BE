@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_location_page_location_items",
+  "info": {
+    "displayName": "locationItem",
+    "icon": "car"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "address": {
+      "type": "string",
+      "required": true
+    },
+    "geoLoc": {
+      "type": "customField",
+      "customField": "plugin::strapi-location-picker.location-picker",
+      "options": {
+        "info": true
+      }
+    }
+  },
+  "config": {}
+}

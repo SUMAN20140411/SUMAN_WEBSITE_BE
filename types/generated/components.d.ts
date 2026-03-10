@@ -1,5 +1,98 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface CertificationPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_certification_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    keywords: Schema.Attribute.Component<'shared.quote', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface CiPageColors extends Struct.ComponentSchema {
+  collectionName: 'components_ci_page_colors';
+  info: {
+    displayName: 'colors';
+    icon: 'brush';
+  };
+  attributes: {
+    color: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.CustomField<'plugin::color-picker.color'>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    pantoneColor: Schema.Attribute.String;
+  };
+}
+
+export interface CiPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_ci_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.RichText;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface CiPageSection2 extends Struct.ComponentSchema {
+  collectionName: 'components_ci_page_section2s';
+  info: {
+    displayName: 'section2';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.RichText;
+    logoFiles: Schema.Attribute.Component<'shared.media', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface HistoryPageHistoryList extends Struct.ComponentSchema {
+  collectionName: 'components_history_page_history_lists';
+  info: {
+    displayName: 'historyList';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.RichText;
+    period: Schema.Attribute.String & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface HistoryPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_history_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    hero: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
+    keywords: Schema.Attribute.Component<'shared.quote', true>;
+    sales: Schema.Attribute.String & Schema.Attribute.DefaultTo<'sales'>;
+    title: Schema.Attribute.Text & Schema.Attribute.Required;
+    worker: Schema.Attribute.String;
+  };
+}
+
+export interface HistoryPageSection2 extends Struct.ComponentSchema {
+  collectionName: 'components_history_page_section2s';
+  info: {
+    displayName: 'section2';
+  };
+  attributes: {
+    historyList: Schema.Attribute.Component<'history-page.history-list', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface HomepageBubbleKeys extends Struct.ComponentSchema {
   collectionName: 'components_homepage_bubble_keys';
   info: {
@@ -85,6 +178,65 @@ export interface HomepageSolutions extends Struct.ComponentSchema {
   };
 }
 
+export interface LocationPageLocationItem extends Struct.ComponentSchema {
+  collectionName: 'components_location_page_location_items';
+  info: {
+    displayName: 'locationItem';
+    icon: 'car';
+  };
+  attributes: {
+    address: Schema.Attribute.String & Schema.Attribute.Required;
+    geoLoc: Schema.Attribute.JSON &
+      Schema.Attribute.CustomField<
+        'plugin::strapi-location-picker.location-picker',
+        {
+          info: true;
+        }
+      >;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface LocationPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_location_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    locations: Schema.Attribute.Component<'location-page.location-item', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface OrganizationPageDepartments extends Struct.ComponentSchema {
+  collectionName: 'components_organization_page_departments';
+  info: {
+    displayName: 'departments';
+    icon: 'cog';
+  };
+  attributes: {
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    teams: Schema.Attribute.Component<'shared.text', true>;
+  };
+}
+
+export interface OrganizationPageOrgChart extends Struct.ComponentSchema {
+  collectionName: 'components_organization_page_org_charts';
+  info: {
+    displayName: 'orgChart';
+    icon: 'cog';
+  };
+  attributes: {
+    advisor: Schema.Attribute.String;
+    ceo: Schema.Attribute.String;
+    departments: Schema.Attribute.Component<
+      'organization-page.departments',
+      true
+    >;
+  };
+}
+
 export interface SharedHeaderItem extends Struct.ComponentSchema {
   collectionName: 'components_shared_header_items';
   info: {
@@ -128,7 +280,8 @@ export interface SharedMedia extends Struct.ComponentSchema {
     icon: 'file-video';
   };
   attributes: {
-    file: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
+    file: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
   };
 }
 
@@ -266,12 +419,23 @@ export interface VisionPageSection4 extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'certification-page.section1': CertificationPageSection1;
+      'ci-page.colors': CiPageColors;
+      'ci-page.section1': CiPageSection1;
+      'ci-page.section2': CiPageSection2;
+      'history-page.history-list': HistoryPageHistoryList;
+      'history-page.section1': HistoryPageSection1;
+      'history-page.section2': HistoryPageSection2;
       'homepage.bubble-keys': HomepageBubbleKeys;
       'homepage.section2': HomepageSection2;
       'homepage.section3': HomepageSection3;
       'homepage.section4': HomepageSection4;
       'homepage.services': HomepageServices;
       'homepage.solutions': HomepageSolutions;
+      'location-page.location-item': LocationPageLocationItem;
+      'location-page.section1': LocationPageSection1;
+      'organization-page.departments': OrganizationPageDepartments;
+      'organization-page.org-chart': OrganizationPageOrgChart;
       'shared.header-item': SharedHeaderItem;
       'shared.header-sub': SharedHeaderSub;
       'shared.info-card': SharedInfoCard;
