@@ -691,12 +691,12 @@ export interface ApiCiPageCiPage extends Struct.SingleTypeSchema {
   };
 }
 
-export interface ApiContactContact extends Struct.SingleTypeSchema {
-  collectionName: 'contacts';
+export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
+  collectionName: 'contact_pages';
   info: {
-    displayName: 'contact';
-    pluralName: 'contacts';
-    singularName: 'contact';
+    displayName: 'ContactPage';
+    pluralName: 'contact-pages';
+    singularName: 'contact-page';
   };
   options: {
     draftAndPublish: true;
@@ -708,11 +708,12 @@ export interface ApiContactContact extends Struct.SingleTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::contact.contact'
+      'api::contact-page.contact-page'
     > &
       Schema.Attribute.Private;
     pageInfo: Schema.Attribute.Component<'shared.page-info', false>;
     publishedAt: Schema.Attribute.DateTime;
+    section1: Schema.Attribute.Component<'contact-page.section1', false>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -808,6 +809,7 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     defaultSeo: Schema.Attribute.Component<'shared.seo', false>;
     favicon: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
+    footer: Schema.Attribute.Component<'shared.footer', false>;
     headerIcon: Schema.Attribute.String &
       Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
     headerItems: Schema.Attribute.Component<'shared.header-item', true>;
@@ -1930,7 +1932,7 @@ declare module '@strapi/strapi' {
       'api::certificate.certificate': ApiCertificateCertificate;
       'api::certification-page.certification-page': ApiCertificationPageCertificationPage;
       'api::ci-page.ci-page': ApiCiPageCiPage;
-      'api::contact.contact': ApiContactContact;
+      'api::contact-page.contact-page': ApiContactPageContactPage;
       'api::equipment-type.equipment-type': ApiEquipmentTypeEquipmentType;
       'api::equipment.equipment': ApiEquipmentEquipment;
       'api::global.global': ApiGlobalGlobal;

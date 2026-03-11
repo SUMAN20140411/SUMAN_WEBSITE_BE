@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_contact_page_contacts",
+  "info": {
+    "displayName": "contact",
+    "icon": "dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "mail": {
+      "type": "email"
+    },
+    "department": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

@@ -53,6 +53,34 @@ export interface CiPageSection2 extends Struct.ComponentSchema {
   };
 }
 
+export interface ContactPageContact extends Struct.ComponentSchema {
+  collectionName: 'components_contact_page_contacts';
+  info: {
+    displayName: 'contact';
+    icon: 'dashboard';
+  };
+  attributes: {
+    department: Schema.Attribute.String;
+    mail: Schema.Attribute.Email;
+    name: Schema.Attribute.String;
+    phone: Schema.Attribute.String;
+  };
+}
+
+export interface ContactPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_contact_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    contacts: Schema.Attribute.Component<'contact-page.contact', true>;
+    description: Schema.Attribute.Text;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface HistoryPageHistoryList extends Struct.ComponentSchema {
   collectionName: 'components_history_page_history_lists';
   info: {
@@ -430,6 +458,17 @@ export interface SharedDeviceCategory extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedFooter extends Struct.ComponentSchema {
+  collectionName: 'components_shared_footers';
+  info: {
+    displayName: 'footer';
+    icon: 'apps';
+  };
+  attributes: {
+    contacts: Schema.Attribute.Component<'contact-page.contact', true>;
+  };
+}
+
 export interface SharedHeaderItem extends Struct.ComponentSchema {
   collectionName: 'components_shared_header_items';
   info: {
@@ -662,6 +701,8 @@ declare module '@strapi/strapi' {
       'ci-page.colors': CiPageColors;
       'ci-page.section1': CiPageSection1;
       'ci-page.section2': CiPageSection2;
+      'contact-page.contact': ContactPageContact;
+      'contact-page.section1': ContactPageSection1;
       'history-page.history-list': HistoryPageHistoryList;
       'history-page.section1': HistoryPageSection1;
       'history-page.section2': HistoryPageSection2;
@@ -688,6 +729,7 @@ declare module '@strapi/strapi' {
       'service-page.section1': ServicePageSection1;
       'service-page.section2': ServicePageSection2;
       'shared.device-category': SharedDeviceCategory;
+      'shared.footer': SharedFooter;
       'shared.header-item': SharedHeaderItem;
       'shared.header-sub': SharedHeaderSub;
       'shared.info-card': SharedInfoCard;

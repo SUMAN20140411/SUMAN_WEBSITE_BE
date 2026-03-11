@@ -43,6 +43,11 @@
       "type": "component",
       "component": "shared.header-item",
       "repeatable": true
+    },
+    "footer": {
+      "type": "component",
+      "component": "shared.footer",
+      "repeatable": false
     }
   }
 }

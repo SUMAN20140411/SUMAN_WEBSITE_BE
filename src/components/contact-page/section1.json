@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_contact_page_section1s",
+  "info": {
+    "displayName": "section1",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "contacts": {
+      "type": "component",
+      "component": "contact-page.contact",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}
