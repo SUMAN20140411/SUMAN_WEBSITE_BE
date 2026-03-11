@@ -319,6 +319,7 @@ export interface PhilosophyPageSection1 extends Struct.ComponentSchema {
           storeIconName: true;
         }
       >;
+    isRecruiting: Schema.Attribute.Boolean;
     position: Schema.Attribute.String;
     state: Schema.Attribute.String;
     submitButton: Schema.Attribute.String;

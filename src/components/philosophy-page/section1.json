@@ -29,6 +29,9 @@
     },
     "description": {
       "type": "text"
+    },
+    "isRecruiting": {
+      "type": "boolean"
     }
   },
   "config": {}
