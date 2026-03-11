@@ -1,27 +1,20 @@
 {
-  "collectionName": "components_rnd_page_research_items",
+  "collectionName": "components_philosophy_page_section1s",
   "info": {
-    "displayName": "researchItem",
-    "icon": "dashboard"
+    "displayName": "section1",
+    "icon": "apps"
   },
   "options": {},
   "attributes": {
-    "hero": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "title": {
       "type": "string",
       "required": true
     },
-    "description": {
-      "type": "richtext"
+    "state": {
+      "type": "string"
+    },
+    "position": {
+      "type": "string"
     },
     "icon": {
       "type": "customField",
@@ -30,6 +23,12 @@
         "storeIconData": true,
         "storeIconName": true
       }
+    },
+    "submitButton": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
     }
   },
   "config": {}

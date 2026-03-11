@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_notice_page_job_sites",
+  "info": {
+    "displayName": "jobSites",
+    "icon": "dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "link": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

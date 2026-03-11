@@ -1,0 +1,49 @@
+{
+  "kind": "singleType",
+  "collectionName": "philosophy_pages",
+  "info": {
+    "singularName": "philosophy-page",
+    "pluralName": "philosophy-pages",
+    "displayName": "PhilosophyPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "pageInfo": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "shared.page-info",
+      "repeatable": false
+    },
+    "section1": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "philosophy-page.section1",
+      "repeatable": false
+    },
+    "keywords": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "philosophy-page.keywords",
+      "repeatable": true
+    }
+  }
+}

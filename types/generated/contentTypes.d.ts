@@ -691,6 +691,34 @@ export interface ApiCiPageCiPage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiContactContact extends Struct.SingleTypeSchema {
+  collectionName: 'contacts';
+  info: {
+    displayName: 'contact';
+    pluralName: 'contacts';
+    singularName: 'contact';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::contact.contact'
+    > &
+      Schema.Attribute.Private;
+    pageInfo: Schema.Attribute.Component<'shared.page-info', false>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiEquipmentTypeEquipmentType
   extends Struct.CollectionTypeSchema {
   collectionName: 'equipment_types';
@@ -1002,6 +1030,45 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiNoticePageNoticePage extends Struct.SingleTypeSchema {
+  collectionName: 'notice_pages';
+  info: {
+    displayName: 'NoticePage';
+    pluralName: 'notice-pages';
+    singularName: 'notice-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::notice-page.notice-page'
+    >;
+    pageInfo: Schema.Attribute.Component<'shared.page-info', true>;
+    publishedAt: Schema.Attribute.DateTime;
+    section1: Schema.Attribute.Component<'notice-page.section1', false>;
+    section2: Schema.Attribute.Component<'notice-page.section2', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiOrganizationPageOrganizationPage
   extends Struct.SingleTypeSchema {
   collectionName: 'organization_pages';
@@ -1040,6 +1107,56 @@ export interface ApiOrganizationPageOrganizationPage
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPhilosophyPagePhilosophyPage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'philosophy_pages';
+  info: {
+    displayName: 'PhilosophyPage';
+    pluralName: 'philosophy-pages';
+    singularName: 'philosophy-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    keywords: Schema.Attribute.Component<'philosophy-page.keywords', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::philosophy-page.philosophy-page'
+    >;
+    pageInfo: Schema.Attribute.Component<'shared.page-info', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    section1: Schema.Attribute.Component<'philosophy-page.section1', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1108,6 +1225,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.String;
+    engName: Schema.Attribute.String;
     files: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -1782,6 +1900,7 @@ declare module '@strapi/strapi' {
       'api::certificate.certificate': ApiCertificateCertificate;
       'api::certification-page.certification-page': ApiCertificationPageCertificationPage;
       'api::ci-page.ci-page': ApiCiPageCiPage;
+      'api::contact.contact': ApiContactContact;
       'api::equipment-type.equipment-type': ApiEquipmentTypeEquipmentType;
       'api::equipment.equipment': ApiEquipmentEquipment;
       'api::global.global': ApiGlobalGlobal;
@@ -1789,7 +1908,9 @@ declare module '@strapi/strapi' {
       'api::home-page.home-page': ApiHomePageHomePage;
       'api::location-page.location-page': ApiLocationPageLocationPage;
       'api::location.location': ApiLocationLocation;
+      'api::notice-page.notice-page': ApiNoticePageNoticePage;
       'api::organization-page.organization-page': ApiOrganizationPageOrganizationPage;
+      'api::philosophy-page.philosophy-page': ApiPhilosophyPagePhilosophyPage;
       'api::product-page.product-page': ApiProductPageProductPage;
       'api::product.product': ApiProductProduct;
       'api::rnd-page.rnd-page': ApiRndPageRndPage;

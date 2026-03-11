@@ -1,5 +1,5 @@
 {
-  "collectionName": "components_product_page_section1s",
+  "collectionName": "components_notice_page_section1s",
   "info": {
     "displayName": "section1",
     "icon": "apps"
@@ -10,15 +10,9 @@
       "type": "string",
       "required": true
     },
-    "description": {
-      "type": "text"
-    },
-    "footnote": {
-      "type": "text"
-    },
-    "products": {
+    "jobSites": {
       "type": "component",
-      "component": "homepage.solutions",
+      "component": "notice-page.job-sites",
       "repeatable": true
     }
   },

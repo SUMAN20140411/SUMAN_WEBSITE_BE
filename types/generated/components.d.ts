@@ -204,6 +204,61 @@ export interface LocationPageSection1 extends Struct.ComponentSchema {
   };
 }
 
+export interface NoticePageForms extends Struct.ComponentSchema {
+  collectionName: 'components_notice_page_forms';
+  info: {
+    displayName: 'forms';
+    icon: 'dashboard';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    downloadText: Schema.Attribute.String;
+    file: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    iconColor: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::color-picker.color'>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface NoticePageJobSites extends Struct.ComponentSchema {
+  collectionName: 'components_notice_page_job_sites';
+  info: {
+    displayName: 'jobSites';
+    icon: 'dashboard';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    link: Schema.Attribute.String;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface NoticePageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_notice_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    jobSites: Schema.Attribute.Component<'notice-page.job-sites', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface NoticePageSection2 extends Struct.ComponentSchema {
+  collectionName: 'components_notice_page_section2s';
+  info: {
+    displayName: 'section2';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    forms: Schema.Attribute.Component<'notice-page.forms', true>;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface OrganizationPageDepartments extends Struct.ComponentSchema {
   collectionName: 'components_organization_page_departments';
   info: {
@@ -235,6 +290,42 @@ export interface OrganizationPageOrgChart extends Struct.ComponentSchema {
   };
 }
 
+export interface PhilosophyPageKeywords extends Struct.ComponentSchema {
+  collectionName: 'components_philosophy_page_keywords';
+  info: {
+    displayName: 'keywords';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface PhilosophyPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_philosophy_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    icon: Schema.Attribute.JSON &
+      Schema.Attribute.CustomField<
+        'plugin::strapi-plugin-iconhub.iconhub',
+        {
+          storeIconData: true;
+          storeIconName: true;
+        }
+      >;
+    position: Schema.Attribute.String;
+    state: Schema.Attribute.String;
+    submitButton: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface ProductPageSection1 extends Struct.ComponentSchema {
   collectionName: 'components_product_page_section1s';
   info: {
@@ -244,7 +335,7 @@ export interface ProductPageSection1 extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     footnote: Schema.Attribute.Text;
-    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
+    products: Schema.Attribute.Component<'homepage.solutions', true>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -258,6 +349,14 @@ export interface RndPageResearchItem extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.RichText;
     hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    icon: Schema.Attribute.JSON &
+      Schema.Attribute.CustomField<
+        'plugin::strapi-plugin-iconhub.iconhub',
+        {
+          storeIconData: true;
+          storeIconName: true;
+        }
+      >;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -530,8 +629,14 @@ declare module '@strapi/strapi' {
       'homepage.solutions': HomepageSolutions;
       'location-page.location-item': LocationPageLocationItem;
       'location-page.section1': LocationPageSection1;
+      'notice-page.forms': NoticePageForms;
+      'notice-page.job-sites': NoticePageJobSites;
+      'notice-page.section1': NoticePageSection1;
+      'notice-page.section2': NoticePageSection2;
       'organization-page.departments': OrganizationPageDepartments;
       'organization-page.org-chart': OrganizationPageOrgChart;
+      'philosophy-page.keywords': PhilosophyPageKeywords;
+      'philosophy-page.section1': PhilosophyPageSection1;
       'product-page.section1': ProductPageSection1;
       'rnd-page.research-item': RndPageResearchItem;
       'rnd-page.section1': RndPageSection1;

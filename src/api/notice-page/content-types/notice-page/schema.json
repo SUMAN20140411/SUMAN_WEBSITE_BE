@@ -1,0 +1,39 @@
+{
+  "kind": "singleType",
+  "collectionName": "notice_pages",
+  "info": {
+    "singularName": "notice-page",
+    "pluralName": "notice-pages",
+    "displayName": "NoticePage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "pageInfo": {
+      "type": "component",
+      "component": "shared.page-info",
+      "repeatable": true
+    },
+    "section1": {
+      "type": "component",
+      "component": "notice-page.section1",
+      "repeatable": false
+    },
+    "section2": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "notice-page.section2",
+      "repeatable": false
+    }
+  }
+}

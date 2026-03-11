@@ -1,7 +1,7 @@
 {
-  "collectionName": "components_product_page_section1s",
+  "collectionName": "components_notice_page_section2s",
   "info": {
-    "displayName": "section1",
+    "displayName": "section2",
     "icon": "apps"
   },
   "options": {},
@@ -10,15 +10,15 @@
       "type": "string",
       "required": true
     },
+    "subtitle": {
+      "type": "string"
+    },
     "description": {
       "type": "text"
     },
-    "footnote": {
-      "type": "text"
-    },
-    "products": {
+    "forms": {
       "type": "component",
-      "component": "homepage.solutions",
+      "component": "notice-page.forms",
       "repeatable": true
     }
   },
