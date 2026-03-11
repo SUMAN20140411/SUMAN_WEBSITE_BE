@@ -235,6 +235,58 @@ export interface OrganizationPageOrgChart extends Struct.ComponentSchema {
   };
 }
 
+export interface ProductPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_product_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    footnote: Schema.Attribute.Text;
+    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface RndPageResearchItem extends Struct.ComponentSchema {
+  collectionName: 'components_rnd_page_research_items';
+  info: {
+    displayName: 'researchItem';
+    icon: 'dashboard';
+  };
+  attributes: {
+    description: Schema.Attribute.RichText;
+    hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface RndPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_rnd_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    researchItems: Schema.Attribute.Component<'rnd-page.research-item', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface RndPageSection2 extends Struct.ComponentSchema {
+  collectionName: 'components_rnd_page_section2s';
+  info: {
+    displayName: 'section2';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface ServicePageSection1 extends Struct.ComponentSchema {
   collectionName: 'components_service_page_section1s';
   info: {
@@ -480,6 +532,10 @@ declare module '@strapi/strapi' {
       'location-page.section1': LocationPageSection1;
       'organization-page.departments': OrganizationPageDepartments;
       'organization-page.org-chart': OrganizationPageOrgChart;
+      'product-page.section1': ProductPageSection1;
+      'rnd-page.research-item': RndPageResearchItem;
+      'rnd-page.section1': RndPageSection1;
+      'rnd-page.section2': RndPageSection2;
       'service-page.section1': ServicePageSection1;
       'service-page.section2': ServicePageSection2;
       'shared.device-category': SharedDeviceCategory;
