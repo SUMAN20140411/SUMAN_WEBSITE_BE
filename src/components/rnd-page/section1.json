@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_rnd_page_section1s",
+  "info": {
+    "displayName": "section1",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "researchItems": {
+      "type": "component",
+      "component": "rnd-page.research-item",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_rnd_page_research_items",
+  "info": {
+    "displayName": "researchItem",
+    "icon": "dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "hero": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_rnd_page_section2s",
+  "info": {
+    "displayName": "section2",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

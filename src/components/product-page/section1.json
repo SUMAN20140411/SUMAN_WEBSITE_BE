@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_product_page_section1s",
+  "info": {
+    "displayName": "section1",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product"
+    },
+    "footnote": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

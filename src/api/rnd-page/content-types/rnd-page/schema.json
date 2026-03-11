@@ -1,0 +1,39 @@
+{
+  "kind": "singleType",
+  "collectionName": "rnd_pages",
+  "info": {
+    "singularName": "rnd-page",
+    "pluralName": "rnd-pages",
+    "displayName": "RndPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "pageInfo": {
+      "type": "component",
+      "component": "shared.page-info",
+      "repeatable": false
+    },
+    "section1": {
+      "type": "component",
+      "component": "rnd-page.section1",
+      "repeatable": false
+    },
+    "section2": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "rnd-page.section2",
+      "repeatable": false
+    }
+  }
+}
