@@ -214,8 +214,6 @@ export interface NoticePageForms extends Struct.ComponentSchema {
     description: Schema.Attribute.Text;
     downloadText: Schema.Attribute.String;
     file: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    iconColor: Schema.Attribute.String &
-      Schema.Attribute.CustomField<'plugin::color-picker.color'>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -612,6 +610,51 @@ export interface VisionPageSection4 extends Struct.ComponentSchema {
   };
 }
 
+export interface WellnessPageBenefit extends Struct.ComponentSchema {
+  collectionName: 'components_wellness_page_benefits';
+  info: {
+    displayName: 'benefit';
+    icon: 'dashboard';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    icon: Schema.Attribute.JSON &
+      Schema.Attribute.CustomField<
+        'plugin::strapi-plugin-iconhub.iconhub',
+        {
+          storeIconData: true;
+          storeIconName: true;
+        }
+      >;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface WellnessPageSection1 extends Struct.ComponentSchema {
+  collectionName: 'components_wellness_page_section1s';
+  info: {
+    displayName: 'section1';
+    icon: 'apps';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface WellnessPageSection2 extends Struct.ComponentSchema {
+  collectionName: 'components_wellness_page_section2s';
+  info: {
+    displayName: 'section2';
+    icon: 'apps';
+  };
+  attributes: {
+    benefits: Schema.Attribute.Component<'wellness-page.benefit', true>;
+    hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -659,6 +702,9 @@ declare module '@strapi/strapi' {
       'vision-page.section1': VisionPageSection1;
       'vision-page.section2': VisionPageSection2;
       'vision-page.section4': VisionPageSection4;
+      'wellness-page.benefit': WellnessPageBenefit;
+      'wellness-page.section1': WellnessPageSection1;
+      'wellness-page.section2': WellnessPageSection2;
     }
   }
 }

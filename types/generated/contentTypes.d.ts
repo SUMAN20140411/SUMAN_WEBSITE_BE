@@ -1384,6 +1384,36 @@ export interface ApiVisionPageVisionPage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiWellnessPageWellnessPage extends Struct.SingleTypeSchema {
+  collectionName: 'wellness_pages';
+  info: {
+    displayName: 'WellnessPage';
+    pluralName: 'wellness-pages';
+    singularName: 'wellness-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::wellness-page.wellness-page'
+    > &
+      Schema.Attribute.Private;
+    pageInfo: Schema.Attribute.Component<'shared.page-info', false>;
+    publishedAt: Schema.Attribute.DateTime;
+    section1: Schema.Attribute.Component<'wellness-page.section1', false>;
+    section2: Schema.Attribute.Component<'wellness-page.section2', false>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1916,6 +1946,7 @@ declare module '@strapi/strapi' {
       'api::rnd-page.rnd-page': ApiRndPageRndPage;
       'api::service-page.service-page': ApiServicePageServicePage;
       'api::vision-page.vision-page': ApiVisionPageVisionPage;
+      'api::wellness-page.wellness-page': ApiWellnessPageWellnessPage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

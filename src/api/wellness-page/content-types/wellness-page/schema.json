@@ -1,0 +1,30 @@
+{
+  "kind": "singleType",
+  "collectionName": "wellness_pages",
+  "info": {
+    "singularName": "wellness-page",
+    "pluralName": "wellness-pages",
+    "displayName": "WellnessPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pageInfo": {
+      "type": "component",
+      "component": "shared.page-info",
+      "repeatable": false
+    },
+    "section1": {
+      "type": "component",
+      "component": "wellness-page.section1",
+      "repeatable": false
+    },
+    "section2": {
+      "type": "component",
+      "component": "wellness-page.section2",
+      "repeatable": false
+    }
+  }
+}

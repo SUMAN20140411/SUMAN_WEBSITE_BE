@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_wellness_page_benefits",
+  "info": {
+    "displayName": "benefit",
+    "icon": "dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "icon": {
+      "type": "customField",
+      "customField": "plugin::strapi-plugin-iconhub.iconhub",
+      "options": {
+        "storeIconData": true,
+        "storeIconName": true
+      }
+    },
+    "description": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

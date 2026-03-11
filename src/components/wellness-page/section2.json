@@ -1,19 +1,16 @@
 {
-  "collectionName": "components_notice_page_forms",
+  "collectionName": "components_wellness_page_section2s",
   "info": {
-    "displayName": "forms",
-    "icon": "dashboard"
+    "displayName": "section2",
+    "icon": "apps"
   },
   "options": {},
   "attributes": {
-    "name": {
+    "title": {
       "type": "string",
       "required": true
     },
-    "description": {
-      "type": "text"
-    },
-    "file": {
+    "hero": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
@@ -23,8 +20,10 @@
         "audios"
       ]
     },
-    "downloadText": {
-      "type": "string"
+    "benefits": {
+      "type": "component",
+      "component": "wellness-page.benefit",
+      "repeatable": true
     }
   },
   "config": {}
