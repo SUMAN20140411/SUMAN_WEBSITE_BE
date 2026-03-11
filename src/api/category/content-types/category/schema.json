@@ -32,11 +32,11 @@
         }
       }
     },
-    "equipment": {
+    "product": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::equipment.equipment",
-      "mappedBy": "category"
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "categories"
     }
   }
 }
