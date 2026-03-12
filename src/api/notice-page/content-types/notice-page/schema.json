@@ -18,7 +18,7 @@
     "pageInfo": {
       "type": "component",
       "component": "shared.page-info",
-      "repeatable": true
+      "repeatable": false
     },
     "section1": {
       "type": "component",

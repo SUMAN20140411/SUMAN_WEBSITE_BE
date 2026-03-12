@@ -1070,7 +1070,7 @@ export interface ApiNoticePageNoticePage extends Struct.SingleTypeSchema {
       'oneToMany',
       'api::notice-page.notice-page'
     >;
-    pageInfo: Schema.Attribute.Component<'shared.page-info', true>;
+    pageInfo: Schema.Attribute.Component<'shared.page-info', false>;
     publishedAt: Schema.Attribute.DateTime;
     section1: Schema.Attribute.Component<'notice-page.section1', false>;
     section2: Schema.Attribute.Component<'notice-page.section2', false> &
