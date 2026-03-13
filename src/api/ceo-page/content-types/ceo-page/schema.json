@@ -50,16 +50,13 @@
       },
       "customField": "plugin::cloudinary-media-library.cloudinary"
     },
-    "messages": {
-      "type": "dynamiczone",
+    "message": {
+      "type": "richtext",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      },
-      "components": [
-        "shared.text"
-      ]
+      }
     },
     "signatures": {
       "type": "component",

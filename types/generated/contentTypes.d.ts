@@ -506,7 +506,7 @@ export interface ApiCeoPageCeoPage extends Struct.SingleTypeSchema {
       'oneToMany',
       'api::ceo-page.ceo-page'
     >;
-    messages: Schema.Attribute.DynamicZone<['shared.text']> &
+    message: Schema.Attribute.RichText &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
