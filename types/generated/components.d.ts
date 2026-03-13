@@ -241,7 +241,8 @@ export interface NoticePageForms extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     downloadText: Schema.Attribute.String;
-    file: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    file: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -324,7 +325,8 @@ export interface PhilosophyPageKeywords extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.Text;
-    hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    hero: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -375,7 +377,8 @@ export interface RndPageResearchItem extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.RichText;
-    hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    hero: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
     icon: Schema.Attribute.JSON &
       Schema.Attribute.CustomField<
         'plugin::strapi-plugin-iconhub.iconhub',
@@ -689,7 +692,8 @@ export interface WellnessPageSection2 extends Struct.ComponentSchema {
   };
   attributes: {
     benefits: Schema.Attribute.Component<'wellness-page.benefit', true>;
-    hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    hero: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }

@@ -21,21 +21,15 @@
     "description": {
       "type": "string"
     },
-    "files": {
-      "type": "media",
-      "multiple": true,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "categories": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::category.category",
       "mappedBy": "product"
+    },
+    "img": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
     }
   }
 }

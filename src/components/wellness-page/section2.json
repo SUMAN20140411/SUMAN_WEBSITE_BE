@@ -11,14 +11,8 @@
       "required": true
     },
     "hero": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
     },
     "benefits": {
       "type": "component",

@@ -6,16 +6,6 @@
   },
   "options": {},
   "attributes": {
-    "hero": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "title": {
       "type": "string",
       "required": true
@@ -30,6 +20,10 @@
         "storeIconData": true,
         "storeIconName": true
       }
+    },
+    "hero": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
     }
   },
   "config": {}

@@ -13,18 +13,12 @@
     "description": {
       "type": "text"
     },
-    "file": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "downloadText": {
       "type": "string"
+    },
+    "file": {
+      "type": "customField",
+      "customField": "plugin::cloudinary-media-library.cloudinary"
     }
   },
   "config": {}
