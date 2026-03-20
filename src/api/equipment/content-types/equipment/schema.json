@@ -17,10 +17,20 @@
   "attributes": {
     "name": {
       "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "required": true
     },
     "img": {
       "type": "customField",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      },
       "customField": "plugin::cloudinary-media-library.cloudinary"
     }
   }
