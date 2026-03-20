@@ -1380,10 +1380,25 @@ export interface ApiServicePageServicePage extends Struct.SingleTypeSchema {
       'oneToMany',
       'api::service-page.service-page'
     >;
-    pageInfo: Schema.Attribute.Component<'shared.page-info', false>;
+    pageInfo: Schema.Attribute.Component<'shared.page-info', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     publishedAt: Schema.Attribute.DateTime;
-    section1: Schema.Attribute.Component<'service-page.section1', false>;
-    section2: Schema.Attribute.Component<'service-page.section2', false>;
+    section1: Schema.Attribute.Component<'service-page.section1', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    section2: Schema.Attribute.Component<'service-page.section2', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     section3: Schema.Attribute.Component<'service-page.section1', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

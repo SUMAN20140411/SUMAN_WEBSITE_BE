@@ -17,16 +17,31 @@
   "attributes": {
     "pageInfo": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "shared.page-info",
       "repeatable": false
     },
     "section1": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "service-page.section1",
       "repeatable": false
     },
     "section2": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "service-page.section2",
       "repeatable": false
     },
