@@ -29,10 +29,103 @@ export default {
       );
     }
 
+    await diagnoseLegacyMediaMappings(strapi);
     await restoreCloudinaryFields(strapi);
     subscribeComponentWrites(strapi);
   }
 };
+
+async function diagnoseLegacyMediaMappings(strapi: Core.Strapi) {
+  const knex = strapi.db.connection as any;
+  const targetTypes = [
+    "components::philosophy-page.keywords",
+    "components::rnd-page.research-item"
+  ];
+
+  try {
+    const columnTypes = await knex.raw(
+      `SELECT table_name, column_name, data_type
+       FROM information_schema.columns
+       WHERE table_schema = 'public'
+         AND (
+           (table_name = 'components_philosophy_page_keywords' AND column_name = 'hero')
+           OR
+           (table_name = 'components_rnd_page_research_items' AND column_name = 'hero')
+         )
+       ORDER BY table_name`
+    );
+    for (const row of columnTypes.rows ?? []) {
+      strapi.log.info(
+        `[SCHEMA-CHECK] ${row.table_name}.${row.column_name} type=${row.data_type}`
+      );
+    }
+  } catch (err: any) {
+    strapi.log.error(`[SCHEMA-CHECK] Failed to inspect hero column types: ${err.message}`);
+  }
+
+  try {
+    const relTables = await knex.raw(
+      `SELECT table_name
+       FROM information_schema.tables
+       WHERE table_schema = 'public'
+         AND (
+           table_name LIKE 'upload%relation%'
+           OR table_name LIKE 'upload%related%'
+           OR table_name LIKE 'files%related%'
+           OR table_name LIKE 'upload_file%orph%'
+           OR table_name LIKE '%_mph'
+         )
+       ORDER BY table_name`
+    );
+
+    const tables = (relTables.rows ?? []).map((r: any) => r.table_name);
+    if (tables.length === 0) {
+      strapi.log.info("[SCHEMA-CHECK] No upload relation-like tables found");
+      return;
+    }
+
+    for (const table of tables) {
+      const colsRes = await knex.raw(
+        `SELECT column_name
+         FROM information_schema.columns
+         WHERE table_schema = 'public' AND table_name = ?
+         ORDER BY ordinal_position`,
+        [table]
+      );
+      const cols = (colsRes.rows ?? []).map((r: any) => r.column_name);
+      const typeCol = cols.find((c: string) =>
+        ["related_type", "relatedtype", "rel_type", "entity_type", "__type"].includes(c)
+      );
+      const fieldCol = cols.find((c: string) =>
+        ["field", "attribute", "related_field", "component_field"].includes(c)
+      );
+
+      if (!typeCol) {
+        continue;
+      }
+
+      const whereField = fieldCol ? ` AND "${fieldCol}" = 'hero'` : "";
+      const countSql = `SELECT COUNT(*)::int AS c FROM "${table}" WHERE "${typeCol}" = ANY(?)${whereField}`;
+      const countRes = await knex.raw(countSql, [targetTypes]);
+      const count = countRes.rows?.[0]?.c ?? 0;
+
+      if (count > 0) {
+        strapi.log.warn(
+          `[SCHEMA-CHECK] Potential stale media mappings in ${table}: ${count} rows for hero on target components`
+        );
+        const sampleSql = `SELECT * FROM "${table}" WHERE "${typeCol}" = ANY(?)${whereField} LIMIT 5`;
+        const sampleRes = await knex.raw(sampleSql, [targetTypes]);
+        for (const row of sampleRes.rows ?? []) {
+          strapi.log.warn(`[SCHEMA-CHECK] Sample ${table}: ${JSON.stringify(row)}`);
+        }
+      } else {
+        strapi.log.info(`[SCHEMA-CHECK] ${table}: no hero media mappings for target components`);
+      }
+    }
+  } catch (err: any) {
+    strapi.log.error(`[SCHEMA-CHECK] Failed to inspect upload relation tables: ${err.message}`);
+  }
+}
 
 async function restoreCloudinaryFields(strapi: Core.Strapi) {
   const knex = strapi.db.connection as any;
