@@ -11,7 +11,9 @@ export default {
     if (client === 'postgres') {
       try {
         const knex = strapi.db.connection;
-        const result = await (knex as any).raw('SELECT current_database(), current_user, version()');
+        const result = await (knex as any).raw(
+          'SELECT current_database(), current_user, version()'
+        );
         const row = result.rows?.[0];
         strapi.log.info(
           `[BOOTSTRAP] Connected to PostgreSQL - db: ${row?.current_database}, user: ${row?.current_user}`
@@ -25,44 +27,53 @@ export default {
       );
     }
 
-    await auditRawDatabase(strapi);
+    await restoreCloudinaryFields(strapi);
     subscribeComponentWrites(strapi);
   },
 };
 
-async function auditRawDatabase(strapi: Core.Strapi) {
+async function restoreCloudinaryFields(strapi: Core.Strapi) {
   const knex = strapi.db.connection as any;
+  const backup: { table: string; id: number; column: string; value: string }[] =
+    (globalThis as any).__strapiPreSyncBackup ?? [];
 
-  const queries = [
-    {
-      label: 'PhilosophyPage keywords (hero = Cloudinary URL)',
-      sql: `SELECT id, title, hero FROM components_philosophy_page_keywords ORDER BY id`,
-    },
-    {
-      label: 'RndPage research items (hero = Cloudinary URL)',
-      sql: `SELECT id, title, hero FROM components_rnd_page_research_items ORDER BY id`,
-    },
-    {
-      label: 'CeoPage (img = Cloudinary URL, message = richtext)',
-      sql: `SELECT id, title, img, LENGTH(message) as message_len, LEFT(message, 80) as message_preview FROM ceo_pages ORDER BY id`,
-    },
-    {
-      label: 'PageInfo shared component (hero = Cloudinary URL)',
-      sql: `SELECT id, title, hero FROM components_shared_page_infos ORDER BY id`,
-    },
-  ];
+  if (backup.length === 0) {
+    strapi.log.info('[RESTORE] No pre-sync backup data found (first boot or tables were empty)');
+    return;
+  }
 
-  for (const { label, sql } of queries) {
+  strapi.log.info(`[RESTORE] Pre-sync backup has ${backup.length} values. Checking for data loss...`);
+
+  let restoredCount = 0;
+
+  for (const { table, id, column, value } of backup) {
     try {
-      const result = await knex.raw(sql);
-      const rows = result.rows ?? [];
-      strapi.log.info(`[RAW-AUDIT] ${label}: ${rows.length} rows`);
-      for (const row of rows) {
-        strapi.log.info(`[RAW-AUDIT]   ${JSON.stringify(row)}`);
+      const current = await knex.raw(
+        `SELECT ${column} FROM ${table} WHERE id = $1`,
+        [id]
+      );
+      const currentVal = current.rows?.[0]?.[column];
+
+      if (currentVal === null || currentVal === undefined || currentVal === '') {
+        strapi.log.warn(
+          `[RESTORE] ${table}.${column} id=${id} was "${value.substring(0, 60)}..." ` +
+          `but is now NULL — RESTORING`
+        );
+        await knex.raw(
+          `UPDATE ${table} SET ${column} = $1 WHERE id = $2`,
+          [value, id]
+        );
+        restoredCount++;
       }
     } catch (err: any) {
-      strapi.log.warn(`[RAW-AUDIT] ${label}: query failed - ${err.message}`);
+      strapi.log.error(`[RESTORE] Failed to check/restore ${table}.${column} id=${id}: ${err.message}`);
     }
+  }
+
+  if (restoredCount > 0) {
+    strapi.log.warn(`[RESTORE] ✓ Restored ${restoredCount} values that were cleared during startup`);
+  } else {
+    strapi.log.info('[RESTORE] All values intact — no restoration needed');
   }
 }
 
@@ -86,11 +97,6 @@ function subscribeComponentWrites(strapi: Core.Strapi) {
         `[COMPONENT-WRITE] beforeCreate ${model.uid} — ` +
         `title: ${JSON.stringify(titleVal)}, hero: ${JSON.stringify(heroVal)}`
       );
-      if (heroVal === null || heroVal === undefined || heroVal === '') {
-        strapi.log.warn(
-          `[COMPONENT-WRITE] ⚠ ${model.uid} hero is EMPTY on create (title: ${JSON.stringify(titleVal)})`
-        );
-      }
     },
 
     async beforeUpdate(event: any) {
@@ -103,14 +109,11 @@ function subscribeComponentWrites(strapi: Core.Strapi) {
           `[COMPONENT-WRITE] beforeUpdate ${model.uid} id=${params?.where?.id} — ` +
           `hero: ${JSON.stringify(heroVal)}`
         );
-        if (heroVal === null || heroVal === undefined || heroVal === '') {
-          strapi.log.warn(
-            `[COMPONENT-WRITE] ⚠ ${model.uid} id=${params?.where?.id} hero being SET TO EMPTY`
-          );
-        }
       }
     },
   });
 
-  strapi.log.info(`[BOOTSTRAP] Component write subscribers registered for: ${watchedModels.join(', ')}`);
+  strapi.log.info(
+    `[BOOTSTRAP] Component write subscribers registered for: ${watchedModels.join(', ')}`
+  );
 }
