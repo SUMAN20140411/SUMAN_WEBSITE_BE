@@ -69,10 +69,10 @@ async function restoreCloudinaryFields(strapi: Core.Strapi) {
           `[RESTORE] ${table}.${column} id=${id} was "${value.substring(0, 60)}..." ` +
             `but is now NULL — RESTORING`
         );
-        await knex.raw(
-          `UPDATE "${table}" SET "${column}" = ? WHERE id = ?`,
-          [value, id]
-        );
+        await knex.raw(`UPDATE "${table}" SET "${column}" = ? WHERE id = ?`, [
+          value,
+          id
+        ]);
         restoredCount++;
       }
     } catch (err: any) {
