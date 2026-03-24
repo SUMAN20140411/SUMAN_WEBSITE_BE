@@ -26,6 +26,7 @@ export default {
     }
 
     await auditRawDatabase(strapi);
+    subscribeComponentWrites(strapi);
   },
 };
 
@@ -63,4 +64,53 @@ async function auditRawDatabase(strapi: Core.Strapi) {
       strapi.log.warn(`[RAW-AUDIT] ${label}: query failed - ${err.message}`);
     }
   }
+}
+
+function subscribeComponentWrites(strapi: Core.Strapi) {
+  const watchedModels = [
+    'philosophy-page.keywords',
+    'rnd-page.research-item',
+    'shared.page-info',
+  ];
+
+  strapi.db.lifecycles.subscribe({
+    models: watchedModels,
+
+    async beforeCreate(event: any) {
+      const { model, params } = event;
+      const data = params?.data;
+      if (!data) return;
+      const heroVal = data.hero;
+      const titleVal = data.title;
+      strapi.log.info(
+        `[COMPONENT-WRITE] beforeCreate ${model.uid} — ` +
+        `title: ${JSON.stringify(titleVal)}, hero: ${JSON.stringify(heroVal)}`
+      );
+      if (heroVal === null || heroVal === undefined || heroVal === '') {
+        strapi.log.warn(
+          `[COMPONENT-WRITE] ⚠ ${model.uid} hero is EMPTY on create (title: ${JSON.stringify(titleVal)})`
+        );
+      }
+    },
+
+    async beforeUpdate(event: any) {
+      const { model, params } = event;
+      const data = params?.data;
+      if (!data) return;
+      if ('hero' in data) {
+        const heroVal = data.hero;
+        strapi.log.info(
+          `[COMPONENT-WRITE] beforeUpdate ${model.uid} id=${params?.where?.id} — ` +
+          `hero: ${JSON.stringify(heroVal)}`
+        );
+        if (heroVal === null || heroVal === undefined || heroVal === '') {
+          strapi.log.warn(
+            `[COMPONENT-WRITE] ⚠ ${model.uid} id=${params?.where?.id} hero being SET TO EMPTY`
+          );
+        }
+      }
+    },
+  });
+
+  strapi.log.info(`[BOOTSTRAP] Component write subscribers registered for: ${watchedModels.join(', ')}`);
 }
