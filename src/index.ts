@@ -55,7 +55,7 @@ async function restoreCloudinaryFields(strapi: Core.Strapi) {
   for (const { table, id, column, value } of backup) {
     try {
       const current = await knex.raw(
-        `SELECT ${column} FROM ${table} WHERE id = $1`,
+        `SELECT "${column}" FROM "${table}" WHERE id = ?`,
         [id]
       );
       const currentVal = current.rows?.[0]?.[column];
@@ -69,10 +69,10 @@ async function restoreCloudinaryFields(strapi: Core.Strapi) {
           `[RESTORE] ${table}.${column} id=${id} was "${value.substring(0, 60)}..." ` +
             `but is now NULL — RESTORING`
         );
-        await knex.raw(`UPDATE ${table} SET ${column} = $1 WHERE id = $2`, [
-          value,
-          id
-        ]);
+        await knex.raw(
+          `UPDATE "${table}" SET "${column}" = ? WHERE id = ?`,
+          [value, id]
+        );
         restoredCount++;
       }
     } catch (err: any) {
