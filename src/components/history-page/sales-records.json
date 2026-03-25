@@ -7,7 +7,7 @@
   "options": {},
   "attributes": {
     "amount": {
-      "type": "biginteger"
+      "type": "decimal"
     },
     "unit": {
       "type": "string"

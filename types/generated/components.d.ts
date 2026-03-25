@@ -101,7 +101,7 @@ export interface HistoryPageSalesRecords extends Struct.ComponentSchema {
     icon: 'dashboard';
   };
   attributes: {
-    amount: Schema.Attribute.BigInteger;
+    amount: Schema.Attribute.Decimal;
     unit: Schema.Attribute.String;
     year: Schema.Attribute.String;
   };
