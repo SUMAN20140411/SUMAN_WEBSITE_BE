@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_history_page_sales_records",
+  "info": {
+    "displayName": "salesRecords",
+    "icon": "dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "amount": {
+      "type": "biginteger"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "year": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

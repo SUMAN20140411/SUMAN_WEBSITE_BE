@@ -94,6 +94,19 @@ export interface HistoryPageHistoryList extends Struct.ComponentSchema {
   };
 }
 
+export interface HistoryPageSalesRecords extends Struct.ComponentSchema {
+  collectionName: 'components_history_page_sales_records';
+  info: {
+    displayName: 'salesRecords';
+    icon: 'dashboard';
+  };
+  attributes: {
+    amount: Schema.Attribute.BigInteger;
+    unit: Schema.Attribute.String;
+    year: Schema.Attribute.String;
+  };
+}
+
 export interface HistoryPageSection1 extends Struct.ComponentSchema {
   collectionName: 'components_history_page_section1s';
   info: {
@@ -105,6 +118,16 @@ export interface HistoryPageSection1 extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'>;
     keywords: Schema.Attribute.Component<'shared.quote', true>;
     sales: Schema.Attribute.String & Schema.Attribute.DefaultTo<'sales'>;
+    salesRecords: Schema.Attribute.Component<
+      'history-page.sales-records',
+      true
+    > &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 4;
+        },
+        number
+      >;
     title: Schema.Attribute.Text & Schema.Attribute.Required;
     worker: Schema.Attribute.String;
   };
@@ -708,6 +731,7 @@ declare module '@strapi/strapi' {
       'contact-page.contact': ContactPageContact;
       'contact-page.section1': ContactPageSection1;
       'history-page.history-list': HistoryPageHistoryList;
+      'history-page.sales-records': HistoryPageSalesRecords;
       'history-page.section1': HistoryPageSection1;
       'history-page.section2': HistoryPageSection2;
       'homepage.bubble-keys': HomepageBubbleKeys;

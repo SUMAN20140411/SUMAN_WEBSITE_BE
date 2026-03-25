@@ -25,6 +25,12 @@
     "hero": {
       "type": "customField",
       "customField": "plugin::cloudinary-media-library.cloudinary"
+    },
+    "salesRecords": {
+      "type": "component",
+      "component": "history-page.sales-records",
+      "repeatable": true,
+      "max": 4
     }
   },
   "config": {}
