@@ -49,6 +49,16 @@ async function ensureCriticalColumns(strapi: Core.Strapi) {
       sqlType: "text"
     },
     {
+      table: "components_shared_page_infos",
+      column: "hero",
+      sqlType: "text"
+    },
+    {
+      table: "ceo_pages",
+      column: "img",
+      sqlType: "text"
+    },
+    {
       table: "ceo_pages",
       column: "message",
       sqlType: "text"
@@ -95,6 +105,8 @@ async function ensureCriticalColumns(strapi: Core.Strapi) {
 const STRAPI_COLUMN_BACKUP_TARGETS: { table: string; column: string }[] = [
   { table: "components_philosophy_page_keywords", column: "hero" },
   { table: "components_rnd_page_research_items", column: "hero" },
+  { table: "components_shared_page_infos", column: "hero" },
+  { table: "ceo_pages", column: "img" },
   { table: "ceo_pages", column: "message" },
   { table: "components_notice_page_forms", column: "file" }
 ];

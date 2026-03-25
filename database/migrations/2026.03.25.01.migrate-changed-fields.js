@@ -6,8 +6,10 @@
  */
 const TARGETS = [
   { table: "ceo_pages", column: "message" },
+  { table: "ceo_pages", column: "img" },
   { table: "components_philosophy_page_keywords", column: "hero" },
   { table: "components_rnd_page_research_items", column: "hero" },
+  { table: "components_shared_page_infos", column: "hero" },
   { table: "components_notice_page_forms", column: "file" }
 ];
 

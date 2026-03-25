@@ -85,11 +85,38 @@ const config = ({
 
   console.log(`[DATABASE] Using client: ${client}`);
 
+  /**
+   * Strapi schema sync can DROP columns when metadata no longer matches the DB
+   * (e.g. after switching hero from Media → Cloudinary custom field).
+   * With forceMigration=false, dropColumn/dropTable/dropIndex are skipped — see
+   * @strapi/database dist/schema/builder.js (dropColumn checks forceMigration).
+   *
+   * Default: false in production (Render), true in development.
+   * Override: DATABASE_FORCE_MIGRATION=true|false
+   */
+  const forceMigrationExplicit = env("DATABASE_FORCE_MIGRATION");
+  const forceMigration =
+    forceMigrationExplicit === "true"
+      ? true
+      : forceMigrationExplicit === "false"
+        ? false
+        : env("NODE_ENV") !== "production";
+
+  if (!forceMigration) {
+    console.log(
+      "[DATABASE] forceMigration=false — schema sync will not drop columns/tables/indexes"
+    );
+  }
+
   return {
     connection: {
       client,
       ...connections[client],
       acquireConnectionTimeout: env.int("DATABASE_CONNECTION_TIMEOUT", 60000)
+    },
+    settings: {
+      forceMigration,
+      runMigrations: env("DATABASE_RUN_MIGRATIONS") !== "false"
     }
   };
 };
