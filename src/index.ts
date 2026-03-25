@@ -29,158 +29,213 @@ export default {
       );
     }
 
-    await diagnoseLegacyMediaMappings(strapi);
-    await restoreCloudinaryFields(strapi);
+    await ensureCriticalColumns(strapi);
+    await restoreFromStrapiColumnBackups(strapi);
     subscribeComponentWrites(strapi);
   }
 };
 
-async function diagnoseLegacyMediaMappings(strapi: Core.Strapi) {
+async function ensureCriticalColumns(strapi: Core.Strapi) {
   const knex = strapi.db.connection as any;
-  const targetTypes = [
-    "components::philosophy-page.keywords",
-    "components::rnd-page.research-item"
+  const expectedColumns = [
+    {
+      table: "components_philosophy_page_keywords",
+      column: "hero",
+      sqlType: "text"
+    },
+    {
+      table: "components_rnd_page_research_items",
+      column: "hero",
+      sqlType: "text"
+    },
+    {
+      table: "ceo_pages",
+      column: "message",
+      sqlType: "text"
+    },
+    {
+      table: "components_notice_page_forms",
+      column: "file",
+      sqlType: "text"
+    }
   ];
 
-  try {
-    const columnTypes = await knex.raw(
-      `SELECT table_name, column_name, data_type
-       FROM information_schema.columns
-       WHERE table_schema = 'public'
-         AND (
-           (table_name = 'components_philosophy_page_keywords' AND column_name = 'hero')
-           OR
-           (table_name = 'components_rnd_page_research_items' AND column_name = 'hero')
-         )
-       ORDER BY table_name`
-    );
-    for (const row of columnTypes.rows ?? []) {
-      strapi.log.info(
-        `[SCHEMA-CHECK] ${row.table_name}.${row.column_name} type=${row.data_type}`
-      );
-    }
-  } catch (err: any) {
-    strapi.log.error(`[SCHEMA-CHECK] Failed to inspect hero column types: ${err.message}`);
-  }
-
-  try {
-    const relTables = await knex.raw(
-      `SELECT table_name
-       FROM information_schema.tables
-       WHERE table_schema = 'public'
-         AND (
-           table_name LIKE 'upload%relation%'
-           OR table_name LIKE 'upload%related%'
-           OR table_name LIKE 'files%related%'
-           OR table_name LIKE 'upload_file%orph%'
-           OR table_name LIKE '%_mph'
-         )
-       ORDER BY table_name`
-    );
-
-    const tables = (relTables.rows ?? []).map((r: any) => r.table_name);
-    if (tables.length === 0) {
-      strapi.log.info("[SCHEMA-CHECK] No upload relation-like tables found");
-      return;
-    }
-
-    for (const table of tables) {
-      const colsRes = await knex.raw(
-        `SELECT column_name
+  for (const { table, column, sqlType } of expectedColumns) {
+    try {
+      const existsRes = await knex.raw(
+        `SELECT 1
          FROM information_schema.columns
-         WHERE table_schema = 'public' AND table_name = ?
-         ORDER BY ordinal_position`,
-        [table]
+         WHERE table_schema = 'public'
+           AND table_name = ?
+           AND column_name = ?
+         LIMIT 1`,
+        [table, column]
       );
-      const cols = (colsRes.rows ?? []).map((r: any) => r.column_name);
-      const typeCol = cols.find((c: string) =>
-        ["related_type", "relatedtype", "rel_type", "entity_type", "__type"].includes(c)
-      );
-      const fieldCol = cols.find((c: string) =>
-        ["field", "attribute", "related_field", "component_field"].includes(c)
-      );
-
-      if (!typeCol) {
-        continue;
-      }
-
-      const whereField = fieldCol ? ` AND "${fieldCol}" = 'hero'` : "";
-      const countSql = `SELECT COUNT(*)::int AS c FROM "${table}" WHERE "${typeCol}" = ANY(?)${whereField}`;
-      const countRes = await knex.raw(countSql, [targetTypes]);
-      const count = countRes.rows?.[0]?.c ?? 0;
-
-      if (count > 0) {
-        strapi.log.warn(
-          `[SCHEMA-CHECK] Potential stale media mappings in ${table}: ${count} rows for hero on target components`
+      const exists = (existsRes.rows ?? []).length > 0;
+      if (!exists) {
+        await knex.raw(
+          `ALTER TABLE "${table}" ADD COLUMN "${column}" ${sqlType}`
         );
-        const sampleSql = `SELECT * FROM "${table}" WHERE "${typeCol}" = ANY(?)${whereField} LIMIT 5`;
-        const sampleRes = await knex.raw(sampleSql, [targetTypes]);
-        for (const row of sampleRes.rows ?? []) {
-          strapi.log.warn(`[SCHEMA-CHECK] Sample ${table}: ${JSON.stringify(row)}`);
-        }
-      } else {
-        strapi.log.info(`[SCHEMA-CHECK] ${table}: no hero media mappings for target components`);
+        strapi.log.warn(
+          `[SCHEMA-HEAL] Added missing column "${table}"."${column}" (${sqlType})`
+        );
       }
+    } catch (err: any) {
+      strapi.log.error(
+        `[SCHEMA-HEAL] Failed checking/creating "${table}"."${column}": ${err.message}`
+      );
     }
-  } catch (err: any) {
-    strapi.log.error(`[SCHEMA-CHECK] Failed to inspect upload relation tables: ${err.message}`);
   }
 }
 
-async function restoreCloudinaryFields(strapi: Core.Strapi) {
-  const knex = strapi.db.connection as any;
-  const backup: { table: string; id: number; column: string; value: string }[] =
-    (globalThis as any).__strapiPreSyncBackup ?? [];
+/**
+ * Tables/columns populated by database/migrations/2026.03.25.01 and
+ * 2026.03.25.02 (strapi_column_backups). Restore reads only that table.
+ */
+const STRAPI_COLUMN_BACKUP_TARGETS: { table: string; column: string }[] = [
+  { table: "components_philosophy_page_keywords", column: "hero" },
+  { table: "components_rnd_page_research_items", column: "hero" },
+  { table: "ceo_pages", column: "message" },
+  { table: "components_notice_page_forms", column: "file" }
+];
 
-  if (backup.length === 0) {
+function quoteSqlIdent(name: string) {
+  return `"${name.replace(/"/g, '""')}"`;
+}
+
+function isEmptyCell(val: unknown) {
+  if (val === null || val === undefined) return true;
+  if (val === "") return true;
+  if (typeof val === "string" && val.trim() === "") return true;
+  return false;
+}
+
+async function restoreFromStrapiColumnBackups(strapi: Core.Strapi) {
+  const dbConfig = strapi.config.get("database.connection") as any;
+  const client = dbConfig?.client ?? "unknown";
+  if (client !== "postgres") {
+    return;
+  }
+
+  const knex = strapi.db.connection as any;
+
+  let tableExists = false;
+  try {
+    const r = await knex.raw(
+      `SELECT 1
+       FROM information_schema.tables
+       WHERE table_schema = 'public' AND table_name = 'strapi_column_backups'
+       LIMIT 1`
+    );
+    tableExists = (r.rows ?? []).length > 0;
+  } catch (err: any) {
+    strapi.log.error(
+      `[RESTORE] Could not check strapi_column_backups: ${err.message}`
+    );
+    return;
+  }
+
+  if (!tableExists) {
     strapi.log.info(
-      "[RESTORE] No pre-sync backup data found (first boot or tables were empty)"
+      "[RESTORE] strapi_column_backups missing — run DB migrations or first backup not created yet"
+    );
+    return;
+  }
+
+  const parts: string[] = [];
+  const bindings: string[] = [];
+  for (const t of STRAPI_COLUMN_BACKUP_TARGETS) {
+    parts.push("(source_table = ? AND source_column = ?)");
+    bindings.push(t.table, t.column);
+  }
+
+  let rows: {
+    source_table: string;
+    source_column: string;
+    row_id: number;
+    value: string;
+  }[] = [];
+
+  try {
+    const rowsRes = await knex.raw(
+      `SELECT source_table, source_column, row_id, value
+       FROM strapi_column_backups
+       WHERE ${parts.join(" OR ")}
+       ORDER BY source_table, source_column, row_id`,
+      bindings
+    );
+    rows = rowsRes.rows ?? [];
+  } catch (err: any) {
+    strapi.log.error(
+      `[RESTORE] Failed to read strapi_column_backups: ${err.message}`
+    );
+    return;
+  }
+
+  if (rows.length === 0) {
+    strapi.log.info(
+      "[RESTORE] No rows for known targets in strapi_column_backups"
     );
     return;
   }
 
   strapi.log.info(
-    `[RESTORE] Pre-sync backup has ${backup.length} values. Checking for data loss...`
+    `[RESTORE] Checking ${rows.length} row(s) from strapi_column_backups`
   );
 
   let restoredCount = 0;
 
-  for (const { table, id, column, value } of backup) {
+  for (const row of rows) {
+    const table = row.source_table;
+    const column = row.source_column;
+    const id = row.row_id;
+    const value = row.value;
+
     try {
+      const colExistsRes = await knex.raw(
+        `SELECT 1
+         FROM information_schema.columns
+         WHERE table_schema = 'public' AND table_name = ? AND column_name = ?
+         LIMIT 1`,
+        [table, column]
+      );
+      if ((colExistsRes.rows ?? []).length === 0) {
+        continue;
+      }
+
+      const qTable = quoteSqlIdent(table);
+      const qCol = quoteSqlIdent(column);
       const current = await knex.raw(
-        `SELECT "${column}" FROM "${table}" WHERE id = ?`,
+        `SELECT ${qCol} AS c FROM ${qTable} WHERE id = ?`,
         [id]
       );
-      const currentVal = current.rows?.[0]?.[column];
+      const currentVal = current.rows?.[0]?.c;
 
-      if (
-        currentVal === null ||
-        currentVal === undefined ||
-        currentVal === ""
-      ) {
-        strapi.log.warn(
-          `[RESTORE] ${table}.${column} id=${id} was "${value.substring(0, 60)}..." ` +
-            `but is now NULL — RESTORING`
-        );
-        await knex.raw(`UPDATE "${table}" SET "${column}" = ? WHERE id = ?`, [
-          value,
-          id
-        ]);
-        restoredCount++;
+      if (!isEmptyCell(currentVal) || !value || String(value).length === 0) {
+        continue;
       }
+
+      strapi.log.warn(
+        `[RESTORE] Restoring ${table}.${column} id=${id} from strapi_column_backups`
+      );
+      await knex.raw(`UPDATE ${qTable} SET ${qCol} = ? WHERE id = ?`, [
+        value,
+        id
+      ]);
+      restoredCount++;
     } catch (err: any) {
       strapi.log.error(
-        `[RESTORE] Failed to check/restore ${table}.${column} id=${id}: ${err.message}`
+        `[RESTORE] Failed ${table}.${column} id=${id}: ${err.message}`
       );
     }
   }
 
   if (restoredCount > 0) {
     strapi.log.warn(
-      `[RESTORE] ✓ Restored ${restoredCount} values that were cleared during startup`
+      `[RESTORE] Restored ${restoredCount} cell(s) from strapi_column_backups`
     );
   } else {
-    strapi.log.info("[RESTORE] All values intact — no restoration needed");
+    strapi.log.info("[RESTORE] strapi_column_backups — nothing to restore");
   }
 }
 
