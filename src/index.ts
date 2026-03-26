@@ -67,6 +67,21 @@ async function ensureCriticalColumns(strapi: Core.Strapi) {
       table: "components_notice_page_forms",
       column: "file",
       sqlType: "text"
+    },
+    {
+      table: "components_history_page_sales_records",
+      column: "amount",
+      sqlType: "NUMERIC(20, 10)"
+    },
+    {
+      table: "components_history_page_sales_records",
+      column: "unit",
+      sqlType: "text"
+    },
+    {
+      table: "components_history_page_sales_records",
+      column: "year",
+      sqlType: "text"
     }
   ];
 
@@ -108,7 +123,10 @@ const STRAPI_COLUMN_BACKUP_TARGETS: { table: string; column: string }[] = [
   { table: "components_shared_page_infos", column: "hero" },
   { table: "ceo_pages", column: "img" },
   { table: "ceo_pages", column: "message" },
-  { table: "components_notice_page_forms", column: "file" }
+  { table: "components_notice_page_forms", column: "file" },
+  { table: "components_history_page_sales_records", column: "amount" },
+  { table: "components_history_page_sales_records", column: "unit" },
+  { table: "components_history_page_sales_records", column: "year" }
 ];
 
 function quoteSqlIdent(name: string) {
