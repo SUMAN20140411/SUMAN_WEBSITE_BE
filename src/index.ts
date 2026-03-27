@@ -223,59 +223,117 @@ async function restoreFromStrapiColumnBackups(strapi: Core.Strapi) {
   }
 
   strapi.log.info(
-    `[RESTORE] Checking ${rows.length} row(s) from strapi_column_backups`
+    `[RESTORE] Checking ${rows.length} backed-up cell(s) from strapi_column_backups`
   );
 
-  let restoredCount = 0;
+  // Group by table+row so we can recreate missing rows first, then restore cells.
+  const rowsByTableAndId = new Map<
+    string,
+    { table: string; id: number; cells: { column: string; value: string }[] }
+  >();
 
   for (const row of rows) {
-    const table = row.source_table;
-    const column = row.source_column;
-    const id = row.row_id;
-    const value = row.value;
+    const key = `${row.source_table}::${row.row_id}`;
+    const entry = rowsByTableAndId.get(key);
+    if (entry) {
+      entry.cells.push({ column: row.source_column, value: row.value });
+      continue;
+    }
+    rowsByTableAndId.set(key, {
+      table: row.source_table,
+      id: row.row_id,
+      cells: [{ column: row.source_column, value: row.value }]
+    });
+  }
+
+  let restoredCount = 0;
+  let insertedRows = 0;
+
+  for (const groupedRow of rowsByTableAndId.values()) {
+    const { table, id, cells } = groupedRow;
 
     try {
-      const colExistsRes = await knex.raw(
-        `SELECT 1
-         FROM information_schema.columns
-         WHERE table_schema = 'public' AND table_name = ? AND column_name = ?
-         LIMIT 1`,
-        [table, column]
-      );
-      if ((colExistsRes.rows ?? []).length === 0) {
-        continue;
-      }
-
       const qTable = quoteSqlIdent(table);
-      const qCol = quoteSqlIdent(column);
-      const current = await knex.raw(
-        `SELECT ${qCol} AS c FROM ${qTable} WHERE id = ?`,
-        [id]
-      );
-      const currentVal = current.rows?.[0]?.c;
+      const rowRes = await knex.raw(`SELECT 1 FROM ${qTable} WHERE id = ? LIMIT 1`, [id]);
+      let rowExists = (rowRes.rows ?? []).length > 0;
 
-      if (!isEmptyCell(currentVal) || !value || String(value).length === 0) {
+      if (!rowExists) {
+        const insertableCells = cells.filter(
+          (c) => c.value && String(c.value).length > 0
+        );
+        const columns = ["id", ...insertableCells.map((c) => c.column)];
+        const values = [id, ...insertableCells.map((c) => c.value)];
+        const qColumns = columns.map(quoteSqlIdent).join(", ");
+        const placeholders = columns.map(() => "?").join(", ");
+
+        try {
+          await knex.raw(
+            `INSERT INTO ${qTable} (${qColumns}) VALUES (${placeholders}) ON CONFLICT (id) DO NOTHING`,
+            values
+          );
+          const checkInsertRes = await knex.raw(
+            `SELECT 1 FROM ${qTable} WHERE id = ? LIMIT 1`,
+            [id]
+          );
+          rowExists = (checkInsertRes.rows ?? []).length > 0;
+          if (rowExists) {
+            insertedRows++;
+            strapi.log.warn(
+              `[RESTORE] Recreated missing row ${table} id=${id} from strapi_column_backups`
+            );
+          }
+        } catch (insertErr: any) {
+          strapi.log.error(
+            `[RESTORE] Failed to recreate missing row ${table} id=${id}: ${insertErr.message}`
+          );
+        }
+      }
+
+      if (!rowExists) {
         continue;
       }
 
-      strapi.log.warn(
-        `[RESTORE] Restoring ${table}.${column} id=${id} from strapi_column_backups`
-      );
-      await knex.raw(`UPDATE ${qTable} SET ${qCol} = ? WHERE id = ?`, [
-        value,
-        id
-      ]);
-      restoredCount++;
+      for (const cell of cells) {
+        const column = cell.column;
+        const value = cell.value;
+        const colExistsRes = await knex.raw(
+          `SELECT 1
+           FROM information_schema.columns
+           WHERE table_schema = 'public' AND table_name = ? AND column_name = ?
+           LIMIT 1`,
+          [table, column]
+        );
+        if ((colExistsRes.rows ?? []).length === 0) {
+          continue;
+        }
+
+        const qCol = quoteSqlIdent(column);
+        const current = await knex.raw(
+          `SELECT ${qCol} AS c FROM ${qTable} WHERE id = ?`,
+          [id]
+        );
+        const currentVal = current.rows?.[0]?.c;
+
+        if (!isEmptyCell(currentVal) || !value || String(value).length === 0) {
+          continue;
+        }
+
+        strapi.log.warn(
+          `[RESTORE] Restoring ${table}.${column} id=${id} from strapi_column_backups`
+        );
+        await knex.raw(`UPDATE ${qTable} SET ${qCol} = ? WHERE id = ?`, [value, id]);
+        restoredCount++;
+      }
     } catch (err: any) {
       strapi.log.error(
-        `[RESTORE] Failed ${table}.${column} id=${id}: ${err.message}`
+        `[RESTORE] Failed row restore cycle ${table} id=${id}: ${err.message}`
       );
     }
   }
 
-  if (restoredCount > 0) {
+  if (restoredCount > 0 || insertedRows > 0) {
     strapi.log.warn(
-      `[RESTORE] Restored ${restoredCount} cell(s) from strapi_column_backups`
+      `[RESTORE] Recreated ${insertedRows} row(s) and restored ${restoredCount} cell(s) from strapi_column_backups`
     );
   } else {
     strapi.log.info("[RESTORE] strapi_column_backups — nothing to restore");
