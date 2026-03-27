@@ -87,6 +87,19 @@ async function ensureCriticalColumns(strapi: Core.Strapi) {
 
   for (const { table, column, sqlType } of expectedColumns) {
     try {
+      const existTableRes = await knex.raw(
+        `SELECT 1
+         FROM information_schema.tables
+         WHERE table_schema = 'public'
+           AND table_name = ?
+         LIMIT 1`,
+        [table]
+      );
+      const existTable = (existTableRes.rows ?? []).length > 0;
+      if (!existTable) {
+        await knex.raw(`CREATE TABLE "${table}" (id SERIAL PRIMARY KEY)`);
+        strapi.log.warn(`[SCHEMA-HEAL] Created missing table "${table}"`);
+      }
       const existsRes = await knex.raw(
         `SELECT 1
          FROM information_schema.columns
