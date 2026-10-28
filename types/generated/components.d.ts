@@ -632,6 +632,18 @@ export interface SharedText extends Struct.ComponentSchema {
   };
 }
 
+export interface TestPageTestSpec extends Struct.ComponentSchema {
+  collectionName: 'components_test_page_test_specs';
+  info: {
+    displayName: 'TestSpec';
+    icon: 'apps';
+  };
+  attributes: {
+    label: Schema.Attribute.String & Schema.Attribute.Required;
+    value: Schema.Attribute.Text & Schema.Attribute.Required;
+  };
+}
+
 export interface VisionPageSection1 extends Struct.ComponentSchema {
   collectionName: 'components_vision_page_section1s';
   info: {
@@ -769,6 +781,7 @@ declare module '@strapi/strapi' {
       'shared.signature': SharedSignature;
       'shared.slider': SharedSlider;
       'shared.text': SharedText;
+      'test-page.test-spec': TestPageTestSpec;
       'vision-page.section1': VisionPageSection1;
       'vision-page.section2': VisionPageSection2;
       'vision-page.section4': VisionPageSection4;

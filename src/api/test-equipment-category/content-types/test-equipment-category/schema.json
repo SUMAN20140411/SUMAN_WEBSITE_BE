@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "test_equipment_categories",
+  "info": {
+    "singularName": "test-equipment-category",
+    "pluralName": "test-equipment-categories",
+    "displayName": "TestEquipmentCategory"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true
+    },
+    "test_equipments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::test-equipment.test-equipment",
+      "mappedBy": "test_equipment_category"
+    }
+  }
+}

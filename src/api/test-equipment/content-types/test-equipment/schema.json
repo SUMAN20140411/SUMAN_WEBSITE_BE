@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "test_equipments",
+  "info": {
+    "singularName": "test-equipment",
+    "pluralName": "test-equipments",
+    "displayName": "TestEquipment"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true
+    },
+    "summary": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "image": {
+      "type": "customField",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "customField": "plugin::cloudinary-media-library.cloudinary"
+    },
+    "specs": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "test-page.test-spec",
+      "repeatable": true
+    },
+    "test_equipment_category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::test-equipment-category.test-equipment-category",
+      "inversedBy": "test_equipments"
+    }
+  }
+}

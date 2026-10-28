@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_test_page_test_specs",
+  "info": {
+    "displayName": "TestSpec",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "value": {
+      "type": "text",
+      "required": true
+    }
+  },
+  "config": {}
+}

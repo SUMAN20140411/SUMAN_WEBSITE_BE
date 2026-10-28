@@ -1422,6 +1422,111 @@ export interface ApiServicePageServicePage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiTestEquipmentCategoryTestEquipmentCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'test_equipment_categories';
+  info: {
+    displayName: 'TestEquipmentCategory';
+    pluralName: 'test-equipment-categories';
+    singularName: 'test-equipment-category';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::test-equipment-category.test-equipment-category'
+    >;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    test_equipments: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::test-equipment.test-equipment'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTestEquipmentTestEquipment
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'test_equipments';
+  info: {
+    displayName: 'TestEquipment';
+    pluralName: 'test-equipments';
+    singularName: 'test-equipment';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    image: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::test-equipment.test-equipment'
+    >;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    specs: Schema.Attribute.Component<'test-page.test-spec', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    summary: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    test_equipment_category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::test-equipment-category.test-equipment-category'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiVisionPageVisionPage extends Struct.SingleTypeSchema {
   collectionName: 'vision_pages';
   info: {
@@ -2063,6 +2168,8 @@ declare module '@strapi/strapi' {
       'api::product.product': ApiProductProduct;
       'api::rnd-page.rnd-page': ApiRndPageRndPage;
       'api::service-page.service-page': ApiServicePageServicePage;
+      'api::test-equipment-category.test-equipment-category': ApiTestEquipmentCategoryTestEquipmentCategory;
+      'api::test-equipment.test-equipment': ApiTestEquipmentTestEquipment;
       'api::vision-page.vision-page': ApiVisionPageVisionPage;
       'api::wellness-page.wellness-page': ApiWellnessPageWellnessPage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
