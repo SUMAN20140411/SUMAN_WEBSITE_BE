@@ -1,0 +1,57 @@
+{
+  "collectionName": "components_test_request_clients",
+  "info": {
+    "displayName": "Client",
+    "icon": "user"
+  },
+  "options": {},
+  "attributes": {
+    "companyName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "representativeName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "businessRegistrationNumber": {
+      "type": "string",
+      "maxLength": 20
+    },
+    "contactName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "phone": {
+      "type": "string",
+      "required": true,
+      "maxLength": 40
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "companyPostalCode": {
+      "type": "string",
+      "required": true,
+      "maxLength": 10
+    },
+    "address": {
+      "type": "text",
+      "required": true,
+      "maxLength": 300
+    },
+    "companyAddressDetail": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "remarks": {
+      "type": "text",
+      "maxLength": 300
+    }
+  },
+  "config": {}
+}

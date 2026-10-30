@@ -1540,6 +1540,58 @@ export interface ApiTestEquipmentTestEquipment
   };
 }
 
+export interface ApiTestRequestTestRequest extends Struct.CollectionTypeSchema {
+  collectionName: 'test_requests';
+  info: {
+    displayName: 'Test Request';
+    pluralName: 'test-requests';
+    singularName: 'test-request';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    accessPasswordHash: Schema.Attribute.Text & Schema.Attribute.Private;
+    client: Schema.Attribute.Component<'test-request.client', false> &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    damageConsent: Schema.Attribute.Boolean & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::test-request.test-request'
+    > &
+      Schema.Attribute.Private;
+    privacyConsent: Schema.Attribute.Boolean & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    receiptNo: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 32;
+      }>;
+    receivedDate: Schema.Attribute.Date & Schema.Attribute.Required;
+    report: Schema.Attribute.Component<'test-request.report', false> &
+      Schema.Attribute.Required;
+    sample: Schema.Attribute.Component<'test-request.sample', false> &
+      Schema.Attribute.Required;
+    status: Schema.Attribute.Enumeration<
+      ['received', 'in_progress', 'completed', 'cancelled']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'received'>;
+    test_equipments: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::test-equipment.test-equipment'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiVisionPageVisionPage extends Struct.SingleTypeSchema {
   collectionName: 'vision_pages';
   info: {
@@ -2183,6 +2235,7 @@ declare module '@strapi/strapi' {
       'api::service-page.service-page': ApiServicePageServicePage;
       'api::test-equipment-category.test-equipment-category': ApiTestEquipmentCategoryTestEquipmentCategory;
       'api::test-equipment.test-equipment': ApiTestEquipmentTestEquipment;
+      'api::test-request.test-request': ApiTestRequestTestRequest;
       'api::vision-page.vision-page': ApiVisionPageVisionPage;
       'api::wellness-page.wellness-page': ApiWellnessPageWellnessPage;
       'plugin::content-releases.release': PluginContentReleasesRelease;

@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_test_request_samples",
+  "info": {
+    "displayName": "Sample",
+    "icon": "cube"
+  },
+  "options": {},
+  "attributes": {
+    "sampleName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "specs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "test-page.test-spec"
+    }
+  },
+  "config": {}
+}

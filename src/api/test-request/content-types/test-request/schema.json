@@ -1,0 +1,72 @@
+{
+  "kind": "collectionType",
+  "collectionName": "test_requests",
+  "info": {
+    "singularName": "test-request",
+    "pluralName": "test-requests",
+    "displayName": "Test Request"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "receiptNo": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 32
+    },
+    "accessPasswordHash": {
+      "type": "text",
+      "private": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["received", "in_progress", "completed", "cancelled"],
+      "default": "received",
+      "required": true
+    },
+    "receivedDate": {
+      "type": "date",
+      "required": true
+    },
+    "locale": {
+      "type": "enumeration",
+      "enum": ["ko", "en"],
+      "default": "ko",
+      "required": true
+    },
+    "test_equipments": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::test-equipment.test-equipment"
+    },
+    "sample": {
+      "type": "component",
+      "repeatable": false,
+      "component": "test-request.sample",
+      "required": true
+    },
+    "report": {
+      "type": "component",
+      "repeatable": false,
+      "component": "test-request.report",
+      "required": true
+    },
+    "client": {
+      "type": "component",
+      "repeatable": false,
+      "component": "test-request.client",
+      "required": true
+    },
+    "privacyConsent": {
+      "type": "boolean",
+      "required": true
+    },
+    "damageConsent": {
+      "type": "boolean",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "collectionName": "components_test_request_reports",
+  "info": {
+    "displayName": "Report",
+    "icon": "file"
+  },
+  "options": {},
+  "attributes": {
+    "receptionType": {
+      "type": "enumeration",
+      "enum": ["general"],
+      "required": true
+    },
+    "purpose": {
+      "type": "enumeration",
+      "enum": ["reference", "quality", "customer", "other"],
+      "required": true
+    },
+    "purposeDetail": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "copyCount": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "receiveMethod": {
+      "type": "enumeration",
+      "enum": ["visit", "mail", "electronic"],
+      "required": true
+    },
+    "shippingName": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "recipientName": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "recipientPhone": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "postalCode": {
+      "type": "string",
+      "maxLength": 10
+    },
+    "deliveryAddress": {
+      "type": "text",
+      "maxLength": 300
+    },
+    "addressDetail": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "samplePhoto": {
+      "type": "enumeration",
+      "enum": ["attach", "skip"],
+      "required": true
+    },
+    "sampleHandling": {
+      "type": "enumeration",
+      "enum": ["dispose", "return"],
+      "required": true
+    }
+  },
+  "config": {}
+}

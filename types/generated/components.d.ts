@@ -644,6 +644,143 @@ export interface TestPageTestSpec extends Struct.ComponentSchema {
   };
 }
 
+export interface TestRequestClient extends Struct.ComponentSchema {
+  collectionName: 'components_test_request_clients';
+  info: {
+    displayName: 'Client';
+    icon: 'user';
+  };
+  attributes: {
+    address: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
+    businessRegistrationNumber: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }>;
+    companyAddressDetail: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    companyName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    companyPostalCode: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 10;
+      }>;
+    contactName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    phone: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 40;
+      }>;
+    remarks: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
+    representativeName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+  };
+}
+
+export interface TestRequestReport extends Struct.ComponentSchema {
+  collectionName: 'components_test_request_reports';
+  info: {
+    displayName: 'Report';
+    icon: 'file';
+  };
+  attributes: {
+    addressDetail: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    copyCount: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    deliveryAddress: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
+    postalCode: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 10;
+      }>;
+    purpose: Schema.Attribute.Enumeration<
+      ['reference', 'quality', 'customer', 'other']
+    > &
+      Schema.Attribute.Required;
+    purposeDetail: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    receiveMethod: Schema.Attribute.Enumeration<
+      ['visit', 'mail', 'electronic']
+    > &
+      Schema.Attribute.Required;
+    receptionType: Schema.Attribute.Enumeration<['general']> &
+      Schema.Attribute.Required;
+    recipientName: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    recipientPhone: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 40;
+      }>;
+    sampleHandling: Schema.Attribute.Enumeration<['dispose', 'return']> &
+      Schema.Attribute.Required;
+    samplePhoto: Schema.Attribute.Enumeration<['attach', 'skip']> &
+      Schema.Attribute.Required;
+    shippingName: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+  };
+}
+
+export interface TestRequestSample extends Struct.ComponentSchema {
+  collectionName: 'components_test_request_samples';
+  info: {
+    displayName: 'Sample';
+    icon: 'cube';
+  };
+  attributes: {
+    quantity: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    sampleName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    specs: Schema.Attribute.Component<'test-page.test-spec', true>;
+  };
+}
+
 export interface VisionPageSection1 extends Struct.ComponentSchema {
   collectionName: 'components_vision_page_section1s';
   info: {
@@ -782,6 +919,9 @@ declare module '@strapi/strapi' {
       'shared.slider': SharedSlider;
       'shared.text': SharedText;
       'test-page.test-spec': TestPageTestSpec;
+      'test-request.client': TestRequestClient;
+      'test-request.report': TestRequestReport;
+      'test-request.sample': TestRequestSample;
       'vision-page.section1': VisionPageSection1;
       'vision-page.section2': VisionPageSection2;
       'vision-page.section4': VisionPageSection4;
