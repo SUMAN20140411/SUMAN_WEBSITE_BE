@@ -1,0 +1,93 @@
+export type Locale = 'ko' | 'en';
+
+const copy = {
+  ko: {
+    rejected: '접수를 처리할 수 없습니다.',
+    rateLimited: '요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.',
+    equipmentRequired: '시험 항목을 1개 이상 선택해 주세요.',
+    equipmentUnknown: '선택한 시험 항목을 확인해 주세요.',
+    sampleName: '시료명을 입력해 주세요.',
+    quantityRequired: '시료수를 입력해 주세요.',
+    quantityInvalid: '시료수는 1 이상의 정수로 입력해 주세요.',
+    tooLong: '입력 가능한 길이를 초과했습니다.',
+    specs: '사양의 항목과 내용을 모두 입력해 주세요.',
+    receptionType: '접수 구분을 선택해 주세요.',
+    purpose: '성적서 용도를 선택해 주세요.',
+    purposeDetail: '제출처를 입력해 주세요.',
+    copyCountRequired: '발급매수를 입력해 주세요.',
+    copyCountInvalid: '발급매수는 1 이상의 정수로 입력해 주세요.',
+    receiveMethod: '수령방법을 선택해 주세요.',
+    shippingName: '우송처명을 입력해 주세요.',
+    recipientName: '수령자를 입력해 주세요.',
+    recipientPhone: '수령자 전화번호를 입력해 주세요.',
+    postalCode: '주소 검색으로 우편번호를 선택해 주세요.',
+    deliveryAddress: '수령지 주소를 선택해 주세요.',
+    addressDetail: '상세주소를 입력해 주세요.',
+    samplePhoto: '시료 사진 첨부 여부를 선택해 주세요.',
+    sampleHandling: '시료 처리방법을 선택해 주세요.',
+    companyName: '업체명을 입력해 주세요.',
+    representativeName: '대표자명을 입력해 주세요.',
+    businessNumberInvalid:
+      '사업자등록번호는 숫자 10자리입니다. 하이픈은 사용할 수 있습니다.',
+    contactName: '담당자명을 입력해 주세요.',
+    phone: '담당자 연락처를 입력해 주세요.',
+    phoneInvalid: '담당자 연락처 형식을 확인해 주세요.',
+    emailRequired: '담당자 이메일을 입력해 주세요.',
+    emailInvalid: '이메일 형식을 확인해 주세요.',
+    companyPostalCode: '주소 검색으로 우편번호를 선택해 주세요.',
+    address: '주소 검색으로 주소를 선택해 주세요.',
+    consentRequired: '동의가 필요합니다.',
+    statusMissing: '접수 번호와 비밀번호를 입력해 주세요.',
+    statusAuth: '접수 번호 또는 비밀번호가 올바르지 않습니다.',
+    saveFailed: '접수에 실패했습니다. 다시 시도해 주세요.',
+  },
+  en: {
+    rejected: 'The request could not be processed.',
+    rateLimited: 'Too many requests. Please try again shortly.',
+    equipmentRequired: 'Select at least one test.',
+    equipmentUnknown: 'Check the selected tests.',
+    sampleName: 'Enter the sample name.',
+    quantityRequired: 'Enter the sample count.',
+    quantityInvalid: 'Enter the sample count as a whole number of 1 or more.',
+    tooLong: 'This entry is too long.',
+    specs: 'Enter both the label and value for each specification.',
+    receptionType: 'Select a reception type.',
+    purpose: 'Select a report purpose.',
+    purposeDetail: 'Enter the submission recipient.',
+    copyCountRequired: 'Enter the number of copies.',
+    copyCountInvalid: 'Enter the number of copies as a whole number of 1 or more.',
+    receiveMethod: 'Select a receiving method.',
+    shippingName: 'Enter the mail recipient name.',
+    recipientName: 'Enter the recipient name.',
+    recipientPhone: 'Enter the recipient phone number.',
+    postalCode: 'Select a postal code via address search.',
+    deliveryAddress: 'Select a delivery address.',
+    addressDetail: 'Enter the detail address.',
+    samplePhoto: 'Select whether to attach sample photos.',
+    sampleHandling: 'Select sample handling after testing.',
+    companyName: 'Enter the company name.',
+    representativeName: 'Enter the representative name.',
+    businessNumberInvalid: 'Enter 10 digits. Hyphens are allowed.',
+    contactName: 'Enter the contact name.',
+    phone: 'Enter the contact phone number.',
+    phoneInvalid: 'Check the contact phone number.',
+    emailRequired: 'Enter the contact email.',
+    emailInvalid: 'Check the email format.',
+    companyPostalCode: 'Select a postal code via address search.',
+    address: 'Select an address via address search.',
+    consentRequired: 'Consent is required.',
+    statusMissing: 'Enter the receipt number and password.',
+    statusAuth: 'The receipt number or password is incorrect.',
+    saveFailed: 'The request could not be saved. Please try again.',
+  },
+} as const;
+
+export type MessageKey = keyof (typeof copy)['ko'];
+
+export function localeOf(value: unknown): Locale {
+  return value === 'en' ? 'en' : 'ko';
+}
+
+export function message(locale: Locale, key: MessageKey) {
+  return copy[locale][key];
+}
