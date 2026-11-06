@@ -194,6 +194,7 @@ async function createRequest(
           sample: value.sample,
           report: value.report,
           client: value.client,
+          billing: value.billing,
           privacyConsent: true,
           damageConsent: true,
         },

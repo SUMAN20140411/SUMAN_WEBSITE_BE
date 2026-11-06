@@ -87,7 +87,7 @@ async function sendManagerEmail(strapi: Notifier, notice: RequestNotice) {
     return;
   }
 
-  const { sample, report, client } = notice.data;
+  const { sample, report, client, billing } = notice.data;
   const lines = [
     `접수 번호: ${notice.receiptNo}`,
     `업체명: ${client.companyName}`,
@@ -95,6 +95,12 @@ async function sendManagerEmail(strapi: Notifier, notice: RequestNotice) {
     `담당자: ${client.contactName}`,
     `연락처: ${client.phone}`,
     `이메일: ${client.email}`,
+    billing.sameAsClient ? '매출처: 의뢰업체와 동일' : '매출처: 별도',
+    `매출처명: ${billing.companyName}`,
+    `매출처 담당자: ${billing.contactName}`,
+    `매출처 사업자등록번호: ${billing.businessRegistrationNumber || '-'}`,
+    `전자계산서 이메일: ${billing.email}`,
+    `매출처 휴대폰: ${billing.phone}`,
     `시료명: ${sample.sampleName}`,
     `시료수: ${sample.quantity}`,
     `성적서 용도: ${PURPOSE_LABELS[report.purpose]}`,

@@ -42,6 +42,14 @@ export type IntakeData = {
     companyAddressDetail: string;
     remarks: string;
   };
+  billing: {
+    sameAsClient: boolean;
+    companyName: string;
+    contactName: string;
+    businessRegistrationNumber: string;
+    email: string;
+    phone: string;
+  };
 };
 
 export type Failure = {
@@ -168,6 +176,35 @@ export function validateIntake(body: unknown): ValidationResult {
   const remarks = asText(client.remarks);
   if (remarks.length > 300) return fail('tooLong');
 
+  const billing = asRecord(record.billing);
+  const sameAsClient = asBoolean(billing.sameAsClient);
+  if (sameAsClient === null) return fail('billingRequired');
+
+  const billingCompanyName = asText(billing.companyName);
+  if (!billingCompanyName) return fail('billingCompanyName');
+  if (billingCompanyName.length > 200) return fail('tooLong');
+
+  const billingContactName = asText(billing.contactName);
+  if (!billingContactName) return fail('billingContactName');
+  if (billingContactName.length > 200) return fail('tooLong');
+
+  const billingBusinessNumber = asText(billing.businessRegistrationNumber);
+  if (billingBusinessNumber.length > 20) return fail('tooLong');
+  if (!isBusinessRegistrationNumber(billingBusinessNumber)) {
+    return fail('businessNumberInvalid');
+  }
+  if (!sameAsClient && !billingBusinessNumber) return fail('businessNumberInvalid');
+
+  const billingEmail = asText(billing.email);
+  if (!billingEmail) return fail('emailRequired');
+  if (billingEmail.length > 254) return fail('tooLong');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(billingEmail)) return fail('emailInvalid');
+
+  const billingPhone = asText(billing.phone);
+  if (!billingPhone) return fail('billingPhone');
+  if (billingPhone.length > 40) return fail('tooLong');
+  if (!/^\d{2,4}-\d{3,4}-\d{4}$/.test(billingPhone)) return fail('phoneInvalid');
+
   if (!isTrue(record.privacyConsent) || !isTrue(record.damageConsent)) {
     return fail('consentRequired');
   }
@@ -209,6 +246,14 @@ export function validateIntake(body: unknown): ValidationResult {
         companyAddressDetail,
         remarks,
       },
+      billing: {
+        sameAsClient,
+        companyName: billingCompanyName,
+        contactName: billingContactName,
+        businessRegistrationNumber: billingBusinessNumber,
+        email: billingEmail,
+        phone: billingPhone,
+      },
     },
   };
 }
@@ -233,6 +278,12 @@ function exceeds(value: string, max: number) {
 
 function isTrue(value: unknown) {
   return value === true || value === 'true';
+}
+
+function asBoolean(value: unknown) {
+  if (value === true || value === 'true') return true;
+  if (value === false || value === 'false') return false;
+  return null;
 }
 
 function includes<T extends string>(values: readonly T[], value: string): value is T {
