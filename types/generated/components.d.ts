@@ -644,6 +644,39 @@ export interface TestPageTestSpec extends Struct.ComponentSchema {
   };
 }
 
+export interface TestRequestBilling extends Struct.ComponentSchema {
+  collectionName: 'components_test_request_billings';
+  info: {
+    displayName: 'Billing';
+    icon: 'file';
+  };
+  attributes: {
+    businessRegistrationNumber: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }>;
+    companyName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    contactName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    phone: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 40;
+      }>;
+    sameAsClient: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
+  };
+}
+
 export interface TestRequestClient extends Struct.ComponentSchema {
   collectionName: 'components_test_request_clients';
   info: {
@@ -919,6 +952,7 @@ declare module '@strapi/strapi' {
       'shared.slider': SharedSlider;
       'shared.text': SharedText;
       'test-page.test-spec': TestPageTestSpec;
+      'test-request.billing': TestRequestBilling;
       'test-request.client': TestRequestClient;
       'test-request.report': TestRequestReport;
       'test-request.sample': TestRequestSample;

@@ -1,0 +1,39 @@
+{
+  "collectionName": "components_test_request_billings",
+  "info": {
+    "displayName": "Billing",
+    "icon": "file"
+  },
+  "options": {},
+  "attributes": {
+    "sameAsClient": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "companyName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "contactName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "businessRegistrationNumber": {
+      "type": "string",
+      "maxLength": 20
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true,
+      "maxLength": 40
+    }
+  },
+  "config": {}
+}
