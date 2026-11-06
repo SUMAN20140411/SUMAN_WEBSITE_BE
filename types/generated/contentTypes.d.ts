@@ -1467,6 +1467,19 @@ export interface ApiTestEquipmentCategoryTestEquipmentCategory
           localized: true;
         };
       }>;
+    order: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     test_equipments: Schema.Attribute.Relation<
       'oneToMany',
@@ -1517,6 +1530,19 @@ export interface ApiTestEquipmentTestEquipment
           localized: true;
         };
       }>;
+    order: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     specs: Schema.Attribute.Component<'test-page.test-spec', true> &
       Schema.Attribute.SetPluginOptions<{

@@ -24,6 +24,16 @@
       },
       "required": true
     },
+    "order": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
     "test_equipments": {
       "type": "relation",
       "relation": "oneToMany",
