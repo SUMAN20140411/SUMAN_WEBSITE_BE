@@ -1578,6 +1578,8 @@ export interface ApiTestRequestTestRequest extends Struct.CollectionTypeSchema {
   };
   attributes: {
     accessPasswordHash: Schema.Attribute.Text & Schema.Attribute.Private;
+    billing: Schema.Attribute.Component<'test-request.billing', false> &
+      Schema.Attribute.Required;
     client: Schema.Attribute.Component<'test-request.client', false> &
       Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;

@@ -60,6 +60,12 @@
       "component": "test-request.client",
       "required": true
     },
+    "billing": {
+      "type": "component",
+      "repeatable": false,
+      "component": "test-request.billing",
+      "required": true
+    },
     "privacyConsent": {
       "type": "boolean",
       "required": true
