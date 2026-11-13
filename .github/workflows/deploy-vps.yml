@@ -65,9 +65,11 @@ jobs:
           TRANSFER_TOKEN_SALT: ${{ secrets.TRANSFER_TOKEN_SALT }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
 
+      # scp-action only packs paths inside the workspace (absolute /tmp paths → empty archive).
       - name: Pack release (no node_modules / .env)
         run: |
-          tar -czf /tmp/strapi-release.tar.gz \
+          tar -czf strapi-release.tar.gz \
+            --exclude=strapi-release.tar.gz \
             --exclude=node_modules \
             --exclude=.git \
             --exclude=.tmp \
@@ -83,7 +85,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
-          source: /tmp/strapi-release.tar.gz
+          source: strapi-release.tar.gz
           target: /tmp
           overwrite: true
 
