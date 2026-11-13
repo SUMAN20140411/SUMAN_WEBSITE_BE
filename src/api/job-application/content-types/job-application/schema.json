@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "job_applications",
+  "info": {
+    "singularName": "job-application",
+    "pluralName": "job-applications",
+    "displayName": "Job Application"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "email": {
+      "type": "string",
+      "required": true,
+      "maxLength": 254
+    },
+    "phone": {
+      "type": "string",
+      "required": true,
+      "maxLength": 60
+    },
+    "position": {
+      "type": "string",
+      "required": true,
+      "maxLength": 120
+    },
+    "message": {
+      "type": "text"
+    },
+    "resume": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["files"]
+    }
+  }
+}
