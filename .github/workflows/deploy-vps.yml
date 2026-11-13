@@ -46,10 +46,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       # Do not set NODE_ENV=production on install — that skips tools needed to build.
+      # Requires package-lock.json committed and in sync with package.json.
       - name: Install dependencies
         run: npm ci
 
