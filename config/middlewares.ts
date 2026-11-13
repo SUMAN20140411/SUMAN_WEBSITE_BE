@@ -57,7 +57,18 @@ const config: Core.Config.Middlewares = [
       }
     }
   },
-  "strapi::cors",
+  {
+    name: "strapi::cors",
+    config: {
+      headers: [
+        "Content-Type",
+        "Authorization",
+        "Origin",
+        "Accept",
+        "x-inquiry-admin-password"
+      ]
+    }
+  },
   "strapi::poweredBy",
   "strapi::query",
   "strapi::body",
