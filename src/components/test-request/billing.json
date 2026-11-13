@@ -25,6 +25,20 @@
       "type": "string",
       "maxLength": 20
     },
+    "companyPostalCode": {
+      "type": "string",
+      "required": true,
+      "maxLength": 10
+    },
+    "address": {
+      "type": "text",
+      "required": true,
+      "maxLength": 300
+    },
+    "companyAddressDetail": {
+      "type": "string",
+      "maxLength": 200
+    },
     "email": {
       "type": "email",
       "required": true

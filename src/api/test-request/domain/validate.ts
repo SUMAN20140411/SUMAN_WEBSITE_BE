@@ -49,6 +49,9 @@ export type IntakeData = {
     businessRegistrationNumber: string;
     email: string;
     phone: string;
+    companyPostalCode: string;
+    address: string;
+    companyAddressDetail: string;
   };
 };
 
@@ -184,10 +187,6 @@ export function validateIntake(body: unknown): ValidationResult {
   if (!billingCompanyName) return fail('billingCompanyName');
   if (billingCompanyName.length > 200) return fail('tooLong');
 
-  const billingContactName = asText(billing.contactName);
-  if (!billingContactName) return fail('billingContactName');
-  if (billingContactName.length > 200) return fail('tooLong');
-
   const billingBusinessNumber = asText(billing.businessRegistrationNumber);
   if (billingBusinessNumber.length > 20) return fail('tooLong');
   if (!isBusinessRegistrationNumber(billingBusinessNumber)) {
@@ -195,15 +194,30 @@ export function validateIntake(body: unknown): ValidationResult {
   }
   if (!sameAsClient && !billingBusinessNumber) return fail('businessNumberInvalid');
 
-  const billingEmail = asText(billing.email);
-  if (!billingEmail) return fail('emailRequired');
-  if (billingEmail.length > 254) return fail('tooLong');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(billingEmail)) return fail('emailInvalid');
+  const billingCompanyPostalCode = asText(billing.companyPostalCode);
+  if (!billingCompanyPostalCode) return fail('companyPostalCode');
+  if (billingCompanyPostalCode.length > 10) return fail('tooLong');
+
+  const billingAddress = asText(billing.address);
+  if (!billingAddress) return fail('address');
+  if (billingAddress.length > 300) return fail('tooLong');
+
+  const billingCompanyAddressDetail = asText(billing.companyAddressDetail);
+  if (billingCompanyAddressDetail.length > 200) return fail('tooLong');
+
+  const billingContactName = asText(billing.contactName);
+  if (!billingContactName) return fail('billingContactName');
+  if (billingContactName.length > 200) return fail('tooLong');
 
   const billingPhone = asText(billing.phone);
   if (!billingPhone) return fail('billingPhone');
   if (billingPhone.length > 40) return fail('tooLong');
   if (!/^\d{2,4}-\d{3,4}-\d{4}$/.test(billingPhone)) return fail('phoneInvalid');
+
+  const billingEmail = asText(billing.email);
+  if (!billingEmail) return fail('emailRequired');
+  if (billingEmail.length > 254) return fail('tooLong');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(billingEmail)) return fail('emailInvalid');
 
   if (!isTrue(record.privacyConsent) || !isTrue(record.damageConsent)) {
     return fail('consentRequired');
@@ -253,6 +267,9 @@ export function validateIntake(body: unknown): ValidationResult {
         businessRegistrationNumber: billingBusinessNumber,
         email: billingEmail,
         phone: billingPhone,
+        companyPostalCode: billingCompanyPostalCode,
+        address: billingAddress,
+        companyAddressDetail: billingCompanyAddressDetail,
       },
     },
   };
