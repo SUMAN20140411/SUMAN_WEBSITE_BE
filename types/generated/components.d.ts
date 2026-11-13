@@ -651,14 +651,28 @@ export interface TestRequestBilling extends Struct.ComponentSchema {
     icon: 'file';
   };
   attributes: {
+    address: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
     businessRegistrationNumber: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 20;
+      }>;
+    companyAddressDetail: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
       }>;
     companyName: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 200;
+      }>;
+    companyPostalCode: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 10;
       }>;
     contactName: Schema.Attribute.String &
       Schema.Attribute.Required &
