@@ -1,0 +1,109 @@
+# Build Strapi admin/server on GitHub (avoids OOM on a 1GB VPS), then
+# rsync the tree over SSH and run production install + restart on the server.
+#
+# Required GitHub secrets:
+#   SSH_HOST            — VPS hostname or IP
+#   SSH_USER            — SSH login (e.g. deploy)
+#   SSH_PRIVATE_KEY     — private key for that user (full PEM)
+#   SSH_PORT            — optional, default 22
+#   DEPLOY_PATH         — absolute app dir on the VPS (e.g. /var/www/suman-website-be)
+#   SYSTEMD_SERVICE     — unit name without .service (e.g. suman-website-be)
+#   APP_KEYS            — same values as the server .env
+#   API_TOKEN_SALT
+#   ADMIN_JWT_SECRET
+#   JWT_SECRET
+#   TRANSFER_TOKEN_SALT
+#   ENCRYPTION_KEY
+#
+# On the VPS once:
+#   - Node 20+ installed
+#   - App dir exists; .env already there (never overwritten by this workflow)
+#   - systemd unit enabled (WorkingDirectory = DEPLOY_PATH, ExecStart = npm/strapi start)
+#   - SSH user can write DEPLOY_PATH and run:
+#       sudo systemctl restart <SYSTEMD_SERVICE>
+#     (passwordless sudo for that command, or deploy as a user that can)
+
+name: Deploy VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Do not set NODE_ENV=production on install — that skips tools needed to build.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Strapi
+        run: npm run build
+        env:
+          NODE_ENV: production
+          APP_KEYS: ${{ secrets.APP_KEYS }}
+          API_TOKEN_SALT: ${{ secrets.API_TOKEN_SALT }}
+          ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          TRANSFER_TOKEN_SALT: ${{ secrets.TRANSFER_TOKEN_SALT }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+
+      - name: Pack release (no node_modules / .env)
+        run: |
+          tar -czf /tmp/strapi-release.tar.gz \
+            --exclude=node_modules \
+            --exclude=.git \
+            --exclude=.tmp \
+            --exclude=.cache \
+            --exclude=.env \
+            --exclude='*.md' \
+            .
+
+      - name: Upload release to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: /tmp/strapi-release.tar.gz
+          target: /tmp
+          overwrite: true
+
+      - name: Extract, install prod deps, restart
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            set -euo pipefail
+            DEPLOY_PATH="${{ secrets.DEPLOY_PATH }}"
+            SERVICE="${{ secrets.SYSTEMD_SERVICE }}"
+            test -n "$DEPLOY_PATH"
+            test -n "$SERVICE"
+            mkdir -p "$DEPLOY_PATH"
+            # Keep server .env; replace app files from the tarball
+            tar -xzf /tmp/strapi-release.tar.gz -C "$DEPLOY_PATH"
+            rm -f /tmp/strapi-release.tar.gz
+            cd "$DEPLOY_PATH"
+            npm ci --omit=dev
+            sudo systemctl restart "$SERVICE"
+            sudo systemctl --no-pager --full status "$SERVICE"
