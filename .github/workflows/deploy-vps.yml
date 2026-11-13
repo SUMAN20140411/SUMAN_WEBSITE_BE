@@ -65,11 +65,12 @@ jobs:
           TRANSFER_TOKEN_SALT: ${{ secrets.TRANSFER_TOKEN_SALT }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
 
-      # scp-action only packs paths inside the workspace (absolute /tmp paths → empty archive).
+      # Write outside the tree being archived. Creating the file inside `.`
+      # makes GNU tar exit 1 with "file changed as we read it".
+      # scp-action only uploads workspace paths, so move the finished archive back.
       - name: Pack release (no node_modules / .env)
         run: |
-          tar -czf strapi-release.tar.gz \
-            --exclude=strapi-release.tar.gz \
+          tar -czf /tmp/strapi-release.tar.gz \
             --exclude=node_modules \
             --exclude=.git \
             --exclude=.tmp \
@@ -77,6 +78,7 @@ jobs:
             --exclude=.env \
             --exclude='*.md' \
             .
+          mv /tmp/strapi-release.tar.gz "$GITHUB_WORKSPACE/strapi-release.tar.gz"
 
       - name: Upload release to VPS
         uses: appleboy/scp-action@v0.1.7
