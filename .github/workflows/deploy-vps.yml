@@ -109,6 +109,25 @@ jobs:
             tar -xzf /tmp/strapi-release.tar.gz -C "$DEPLOY_PATH"
             rm -f /tmp/strapi-release.tar.gz
             cd "$DEPLOY_PATH"
+            # Non-interactive SSH does not load .bashrc, so nvm/fnm/snap Node is not on PATH.
+            if ! command -v npm >/dev/null 2>&1; then
+              set +u
+              if [ -s "$HOME/.nvm/nvm.sh" ]; then
+                export NVM_DIR="$HOME/.nvm"
+                . "$NVM_DIR/nvm.sh"
+              elif [ -s "$HOME/.fnm/fnm" ]; then
+                eval "$("$HOME/.fnm/fnm" env)"
+              elif [ -x /snap/bin/npm ]; then
+                export PATH="/snap/bin:$PATH"
+              else
+                NODE_BIN="$(ls -d "$HOME"/.nvm/versions/node/*/bin 2>/dev/null | sort -V | tail -1 || true)"
+                if [ -n "$NODE_BIN" ]; then
+                  export PATH="$NODE_BIN:$PATH"
+                fi
+              fi
+              set -u
+            fi
+            command -v npm
             npm ci --omit=dev
             sudo systemctl restart "$SERVICE"
             sudo systemctl --no-pager --full status "$SERVICE"
