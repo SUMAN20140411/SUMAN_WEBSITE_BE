@@ -1,5 +1,6 @@
 import { factories, type Core } from '@strapi/strapi';
-import { message, localeOf } from '../domain/messages';
+import { validateIntakeFiles, type ValidatedFiles } from '../domain/files';
+import { message, localeOf, type Locale } from '../domain/messages';
 import { sendTestRequestEmails } from '../domain/notify';
 import {
   DUMMY_PASSWORD_HASH,
@@ -31,6 +32,14 @@ type SavedRequest = {
   accessPasswordHash?: string | null;
 };
 
+type UploadService = {
+  upload: (params: {
+    data: Record<string, unknown>;
+    files: unknown;
+  }) => Promise<unknown[]>;
+  remove: (file: { id?: number | string; provider?: string; formats?: Record<string, unknown> }) => Promise<unknown>;
+};
+
 export default factories.createCoreService(UID, ({ strapi }) => ({
   rateLimit(ip: string, route: LimitedRoute, locale: unknown) {
     if (consumeRateLimit(ip, route)) return null;
@@ -50,7 +59,10 @@ export default factories.createCoreService(UID, ({ strapi }) => ({
     return formatReceipt(prefix, max + 1);
   },
 
-  async intake(body: unknown): Promise<{ ok: true; receiptNo: string } | Failure> {
+  async intake(
+    body: unknown,
+    rawFiles?: Record<string, unknown>
+  ): Promise<{ ok: true; receiptNo: string } | Failure> {
     const validated = validateIntake(body);
     if (!validated.ok) {
       const failure = validated as Failure;
@@ -59,6 +71,11 @@ export default factories.createCoreService(UID, ({ strapi }) => ({
         status: failure.status,
         message: failure.message,
       };
+    }
+
+    const filesResult = validateIntakeFiles(rawFiles, validated.value.locale);
+    if (!filesResult.ok) {
+      return filesResult as Failure;
     }
 
     const equipment = await publishedEquipment(strapi, validated.value.equipmentIds);
@@ -75,12 +92,22 @@ export default factories.createCoreService(UID, ({ strapi }) => ({
     const saved = await createRequest(strapi, validated.value, passwordHash);
     if (!saved.ok) return saved;
 
+    const attached = await attachRequestFiles(
+      strapi,
+      saved.documentId,
+      filesResult.value,
+      validated.value.locale
+    );
+    if (!attached.ok) return attached as Failure;
+
     await sendTestRequestEmails(strapi, {
       documentId: saved.documentId,
       receiptNo: saved.receiptNo,
       password,
       equipmentNames: equipment.names,
       data: validated.value,
+      businessRegistrationFileName: filesResult.value.businessRegistrationFile.safeName,
+      applicationFileNames: filesResult.value.applicationFiles.map((item) => item.safeName),
     });
 
     return { ok: true, receiptNo: saved.receiptNo };
@@ -194,7 +221,6 @@ async function createRequest(
           sample: value.sample,
           report: value.report,
           client: value.client,
-          billing: value.billing,
           privacyConsent: true,
           damageConsent: true,
         },
@@ -217,6 +243,89 @@ async function createRequest(
     status: 500,
     message: message(value.locale, 'saveFailed'),
   };
+}
+
+async function attachRequestFiles(
+  strapi: Core.Strapi,
+  documentId: string,
+  files: ValidatedFiles,
+  locale: Locale
+): Promise<{ ok: true } | Failure> {
+  const uploadService = strapi.plugin('upload').service('upload') as UploadService;
+  const uploaded: Array<{ id?: number | string; provider?: string; formats?: Record<string, unknown> }> = [];
+
+  try {
+    const bizUploaded = await uploadService.upload({
+      data: {
+        ref: UID,
+        refId: documentId,
+        field: 'businessRegistrationFile',
+        fileInfo: { name: files.businessRegistrationFile.safeName },
+      },
+      files: files.businessRegistrationFile.uploadFile,
+    });
+    if (Array.isArray(bizUploaded)) {
+      uploaded.push(...(bizUploaded as typeof uploaded));
+    }
+
+    if (files.applicationFiles.length > 0) {
+      const appUploaded = await uploadService.upload({
+        data: {
+          ref: UID,
+          refId: documentId,
+          field: 'applicationFiles',
+          fileInfo: files.applicationFiles.map((item) => ({ name: item.safeName })),
+        },
+        files: files.applicationFiles.map((item) => item.uploadFile),
+      });
+      if (Array.isArray(appUploaded)) {
+        uploaded.push(...(appUploaded as typeof uploaded));
+      }
+    }
+
+    return { ok: true };
+  } catch (error) {
+    strapi.log.error('Failed to upload test request attachments.');
+    strapi.log.error(error);
+
+    await Promise.allSettled(
+      uploaded
+        .filter((entry) => entry && entry.id !== undefined)
+        .map((entry) => uploadService.remove(entry))
+    );
+    await strapi
+      .documents(UID)
+      .delete({ documentId })
+      .catch((cleanupError) => {
+        strapi.log.error(`Failed to roll back test request ${documentId}.`);
+        strapi.log.error(cleanupError);
+      });
+
+    if (isClientUploadError(error)) {
+      return {
+        ok: false,
+        status: 400,
+        message: message(locale, 'fileUploadInvalid'),
+      };
+    }
+
+    return {
+      ok: false,
+      status: 500,
+      message: message(locale, 'saveFailed'),
+    };
+  }
+}
+
+function isClientUploadError(error: unknown) {
+  if (error && typeof error === 'object' && 'name' in error) {
+    const name = String((error as { name?: unknown }).name || '');
+    if (name === 'ApplicationError' || name === 'ValidationError') {
+      return true;
+    }
+  }
+  const text = errorText(error).toLowerCase();
+  return text.includes('valid image') || text.includes('file name');
 }
 
 function isUniqueViolation(error: unknown) {
