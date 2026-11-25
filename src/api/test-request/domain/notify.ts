@@ -9,6 +9,8 @@ export type RequestNotice = {
   password: string;
   equipmentNames: string[];
   data: IntakeData;
+  businessRegistrationFileName: string;
+  applicationFileNames: string[];
 };
 
 const PURPOSE_LABELS: Record<IntakeData['report']['purpose'], string> = {
@@ -20,8 +22,8 @@ const PURPOSE_LABELS: Record<IntakeData['report']['purpose'], string> = {
 
 const RECEIVE_LABELS: Record<IntakeData['report']['receiveMethod'], string> = {
   visit: '방문',
-  mail: '우송',
-  electronic: '전자성적서',
+  mail: '우편',
+  email: '이메일',
 };
 
 let warnedMissingSite = false;
@@ -87,26 +89,24 @@ async function sendManagerEmail(strapi: Notifier, notice: RequestNotice) {
     return;
   }
 
-  const { sample, report, client, billing } = notice.data;
+  const { sample, report, client } = notice.data;
   const lines = [
     `접수 번호: ${notice.receiptNo}`,
     `업체명: ${client.companyName}`,
-    `대표자명: ${client.representativeName}`,
+    `사업자등록번호: ${client.businessRegistrationNumber || '-'}`,
+    `사업자등록증: ${notice.businessRegistrationFileName}`,
     `담당자: ${client.contactName}`,
     `연락처: ${client.phone}`,
     `이메일: ${client.email}`,
-    billing.sameAsClient ? '매출처: 의뢰업체와 동일' : '매출처: 별도',
-    `매출처명: ${billing.companyName}`,
-    `매출처 사업자등록번호: ${billing.businessRegistrationNumber || '-'}`,
-    `매출처 주소: ${[billing.companyPostalCode, billing.address, billing.companyAddressDetail].filter(Boolean).join(' ') || '-'}`,
-    `매출처 담당자: ${billing.contactName}`,
-    `매출처 휴대폰: ${billing.phone}`,
-    `전자계산서 이메일: ${billing.email}`,
     `시료명: ${sample.sampleName}`,
     `시료수: ${sample.quantity}`,
+    `신청서 첨부파일: ${notice.applicationFileNames.length > 0 ? notice.applicationFileNames.join(', ') : '-'}`,
     `성적서 용도: ${PURPOSE_LABELS[report.purpose]}`,
     report.purposeDetail ? `제출처: ${report.purposeDetail}` : '',
+    `분석 용도: ${report.analysisPurpose}`,
+    `희망 완료일: ${report.desiredCompletionDate} (협의 필수)`,
     `수령방법: ${RECEIVE_LABELS[report.receiveMethod]}`,
+    `추가 분석 요구사항: ${report.hasAdditionalAnalysis ? `있음 (${report.additionalAnalysisDetail})` : '없음'}`,
     `시험 항목: ${notice.equipmentNames.join(', ') || '-'}`,
     '',
     `관리 화면: ${adminEntryUrl(notice.documentId)}`,

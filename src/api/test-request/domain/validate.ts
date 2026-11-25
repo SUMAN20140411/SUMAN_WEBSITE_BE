@@ -1,8 +1,8 @@
 import { localeOf, message, type Locale, type MessageKey } from './messages';
+import { seoulStamp } from './receipt';
 
 const PURPOSES = ['reference', 'quality', 'customer', 'other'] as const;
-const RECEIVE_METHODS = ['visit', 'mail', 'electronic'] as const;
-const SAMPLE_PHOTOS = ['attach', 'skip'] as const;
+const RECEIVE_METHODS = ['visit', 'mail', 'email'] as const;
 const SAMPLE_HANDLINGS = ['dispose', 'return'] as const;
 const MAX_SPECS = 12;
 const MAX_EQUIPMENT = 100;
@@ -19,6 +19,8 @@ export type IntakeData = {
     receptionType: 'general';
     purpose: (typeof PURPOSES)[number];
     purposeDetail: string;
+    analysisPurpose: string;
+    desiredCompletionDate: string;
     copyCount: number;
     receiveMethod: (typeof RECEIVE_METHODS)[number];
     shippingName: string;
@@ -27,12 +29,12 @@ export type IntakeData = {
     postalCode: string;
     deliveryAddress: string;
     addressDetail: string;
-    samplePhoto: (typeof SAMPLE_PHOTOS)[number];
     sampleHandling: (typeof SAMPLE_HANDLINGS)[number];
+    hasAdditionalAnalysis: boolean;
+    additionalAnalysisDetail: string;
   };
   client: {
     companyName: string;
-    representativeName: string;
     businessRegistrationNumber: string;
     contactName: string;
     phone: string;
@@ -41,17 +43,6 @@ export type IntakeData = {
     address: string;
     companyAddressDetail: string;
     remarks: string;
-  };
-  billing: {
-    sameAsClient: boolean;
-    companyName: string;
-    contactName: string;
-    businessRegistrationNumber: string;
-    email: string;
-    phone: string;
-    companyPostalCode: string;
-    address: string;
-    companyAddressDetail: string;
   };
 };
 
@@ -101,6 +92,16 @@ export function validateIntake(body: unknown): ValidationResult {
   if (purposeDetail.length > 200) return fail('tooLong');
   if (purpose === 'customer' && !purposeDetail) return fail('purposeDetail');
 
+  const analysisPurpose = asText(report.analysisPurpose);
+  if (!analysisPurpose) return fail('analysisPurpose');
+  if (analysisPurpose.length > 500) return fail('tooLong');
+
+  const desiredCompletionDate = asText(report.desiredCompletionDate);
+  if (!desiredCompletionDate) return fail('desiredCompletionDateRequired');
+  if (!isValidOnOrAfterToday(desiredCompletionDate)) {
+    return fail('desiredCompletionDateInvalid');
+  }
+
   if (isBlank(report.copyCount)) return fail('copyCountRequired');
   const copyCount = wholeNumber(report.copyCount);
   if (copyCount === null) return fail('copyCountInvalid');
@@ -133,18 +134,21 @@ export function validateIntake(body: unknown): ValidationResult {
     if (!addressDetail) return fail('addressDetail');
   }
 
-  const samplePhoto = asText(report.samplePhoto);
-  if (!includes(SAMPLE_PHOTOS, samplePhoto)) return fail('samplePhoto');
   const sampleHandling = asText(report.sampleHandling);
   if (!includes(SAMPLE_HANDLINGS, sampleHandling)) return fail('sampleHandling');
+
+  const hasAdditionalAnalysis = asBooleanChoice(report.hasAdditionalAnalysis);
+  if (hasAdditionalAnalysis === null) return fail('additionalAnalysisRequired');
+
+  const additionalAnalysisDetail = asText(report.additionalAnalysisDetail);
+  if (additionalAnalysisDetail.length > 1000) return fail('tooLong');
+  if (hasAdditionalAnalysis && !additionalAnalysisDetail) {
+    return fail('additionalAnalysisDetail');
+  }
 
   const companyName = asText(client.companyName);
   if (!companyName) return fail('companyName');
   if (companyName.length > 200) return fail('tooLong');
-
-  const representativeName = asText(client.representativeName);
-  if (!representativeName) return fail('representativeName');
-  if (representativeName.length > 200) return fail('tooLong');
 
   const businessRegistrationNumber = asText(client.businessRegistrationNumber);
   if (businessRegistrationNumber.length > 20) return fail('tooLong');
@@ -179,46 +183,6 @@ export function validateIntake(body: unknown): ValidationResult {
   const remarks = asText(client.remarks);
   if (remarks.length > 300) return fail('tooLong');
 
-  const billing = asRecord(record.billing);
-  const sameAsClient = asBoolean(billing.sameAsClient);
-  if (sameAsClient === null) return fail('billingRequired');
-
-  const billingCompanyName = asText(billing.companyName);
-  if (!billingCompanyName) return fail('billingCompanyName');
-  if (billingCompanyName.length > 200) return fail('tooLong');
-
-  const billingBusinessNumber = asText(billing.businessRegistrationNumber);
-  if (billingBusinessNumber.length > 20) return fail('tooLong');
-  if (!isBusinessRegistrationNumber(billingBusinessNumber)) {
-    return fail('businessNumberInvalid');
-  }
-  if (!sameAsClient && !billingBusinessNumber) return fail('businessNumberInvalid');
-
-  const billingCompanyPostalCode = asText(billing.companyPostalCode);
-  if (!billingCompanyPostalCode) return fail('companyPostalCode');
-  if (billingCompanyPostalCode.length > 10) return fail('tooLong');
-
-  const billingAddress = asText(billing.address);
-  if (!billingAddress) return fail('address');
-  if (billingAddress.length > 300) return fail('tooLong');
-
-  const billingCompanyAddressDetail = asText(billing.companyAddressDetail);
-  if (billingCompanyAddressDetail.length > 200) return fail('tooLong');
-
-  const billingContactName = asText(billing.contactName);
-  if (!billingContactName) return fail('billingContactName');
-  if (billingContactName.length > 200) return fail('tooLong');
-
-  const billingPhone = asText(billing.phone);
-  if (!billingPhone) return fail('billingPhone');
-  if (billingPhone.length > 40) return fail('tooLong');
-  if (!/^\d{2,4}-\d{3,4}-\d{4}$/.test(billingPhone)) return fail('phoneInvalid');
-
-  const billingEmail = asText(billing.email);
-  if (!billingEmail) return fail('emailRequired');
-  if (billingEmail.length > 254) return fail('tooLong');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(billingEmail)) return fail('emailInvalid');
-
   if (!isTrue(record.privacyConsent) || !isTrue(record.damageConsent)) {
     return fail('consentRequired');
   }
@@ -237,6 +201,8 @@ export function validateIntake(body: unknown): ValidationResult {
         receptionType: 'general',
         purpose,
         purposeDetail,
+        analysisPurpose,
+        desiredCompletionDate,
         copyCount,
         receiveMethod,
         shippingName: receiveMethod === 'mail' ? shippingName : '',
@@ -245,12 +211,12 @@ export function validateIntake(body: unknown): ValidationResult {
         postalCode: receiveMethod === 'mail' ? postalCode : '',
         deliveryAddress: receiveMethod === 'mail' ? deliveryAddress : '',
         addressDetail: receiveMethod === 'mail' ? addressDetail : '',
-        samplePhoto,
         sampleHandling,
+        hasAdditionalAnalysis,
+        additionalAnalysisDetail: hasAdditionalAnalysis ? additionalAnalysisDetail : '',
       },
       client: {
         companyName,
-        representativeName,
         businessRegistrationNumber,
         contactName,
         phone,
@@ -259,17 +225,6 @@ export function validateIntake(body: unknown): ValidationResult {
         address,
         companyAddressDetail,
         remarks,
-      },
-      billing: {
-        sameAsClient,
-        companyName: billingCompanyName,
-        contactName: billingContactName,
-        businessRegistrationNumber: billingBusinessNumber,
-        email: billingEmail,
-        phone: billingPhone,
-        companyPostalCode: billingCompanyPostalCode,
-        address: billingAddress,
-        companyAddressDetail: billingCompanyAddressDetail,
       },
     },
   };
@@ -297,10 +252,24 @@ function isTrue(value: unknown) {
   return value === true || value === 'true';
 }
 
-function asBoolean(value: unknown) {
-  if (value === true || value === 'true') return true;
-  if (value === false || value === 'false') return false;
+function asBooleanChoice(value: unknown) {
+  if (value === true || value === 'true' || value === 'yes') return true;
+  if (value === false || value === 'false' || value === 'no') return false;
   return null;
+}
+
+function isValidOnOrAfterToday(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split('-').map(Number);
+  const utc = new Date(Date.UTC(year, month - 1, day));
+  if (
+    utc.getUTCFullYear() !== year ||
+    utc.getUTCMonth() !== month - 1 ||
+    utc.getUTCDate() !== day
+  ) {
+    return false;
+  }
+  return value >= seoulStamp().iso;
 }
 
 function includes<T extends string>(values: readonly T[], value: string): value is T {
