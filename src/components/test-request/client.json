@@ -11,11 +11,6 @@
       "required": true,
       "maxLength": 200
     },
-    "representativeName": {
-      "type": "string",
-      "required": true,
-      "maxLength": 200
-    },
     "businessRegistrationNumber": {
       "type": "string",
       "maxLength": 20

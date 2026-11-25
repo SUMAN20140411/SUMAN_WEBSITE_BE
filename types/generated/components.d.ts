@@ -644,53 +644,6 @@ export interface TestPageTestSpec extends Struct.ComponentSchema {
   };
 }
 
-export interface TestRequestBilling extends Struct.ComponentSchema {
-  collectionName: 'components_test_request_billings';
-  info: {
-    displayName: 'Billing';
-    icon: 'file';
-  };
-  attributes: {
-    address: Schema.Attribute.Text &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 300;
-      }>;
-    businessRegistrationNumber: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 20;
-      }>;
-    companyAddressDetail: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 200;
-      }>;
-    companyName: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 200;
-      }>;
-    companyPostalCode: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 10;
-      }>;
-    contactName: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 200;
-      }>;
-    email: Schema.Attribute.Email & Schema.Attribute.Required;
-    phone: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 40;
-      }>;
-    sameAsClient: Schema.Attribute.Boolean &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<true>;
-  };
-}
-
 export interface TestRequestClient extends Struct.ComponentSchema {
   collectionName: 'components_test_request_clients';
   info: {
@@ -736,11 +689,6 @@ export interface TestRequestClient extends Struct.ComponentSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 300;
       }>;
-    representativeName: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 200;
-      }>;
   };
 }
 
@@ -751,9 +699,18 @@ export interface TestRequestReport extends Struct.ComponentSchema {
     icon: 'file';
   };
   attributes: {
+    additionalAnalysisDetail: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
     addressDetail: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 200;
+      }>;
+    analysisPurpose: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 500;
       }>;
     copyCount: Schema.Attribute.Integer &
       Schema.Attribute.Required &
@@ -767,6 +724,8 @@ export interface TestRequestReport extends Struct.ComponentSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 300;
       }>;
+    desiredCompletionDate: Schema.Attribute.Date & Schema.Attribute.Required;
+    hasAdditionalAnalysis: Schema.Attribute.Boolean & Schema.Attribute.Required;
     postalCode: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 10;
@@ -779,9 +738,7 @@ export interface TestRequestReport extends Struct.ComponentSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 200;
       }>;
-    receiveMethod: Schema.Attribute.Enumeration<
-      ['visit', 'mail', 'electronic']
-    > &
+    receiveMethod: Schema.Attribute.Enumeration<['visit', 'mail', 'email']> &
       Schema.Attribute.Required;
     receptionType: Schema.Attribute.Enumeration<['general']> &
       Schema.Attribute.Required;
@@ -794,8 +751,6 @@ export interface TestRequestReport extends Struct.ComponentSchema {
         maxLength: 40;
       }>;
     sampleHandling: Schema.Attribute.Enumeration<['dispose', 'return']> &
-      Schema.Attribute.Required;
-    samplePhoto: Schema.Attribute.Enumeration<['attach', 'skip']> &
       Schema.Attribute.Required;
     shippingName: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
@@ -966,7 +921,6 @@ declare module '@strapi/strapi' {
       'shared.slider': SharedSlider;
       'shared.text': SharedText;
       'test-page.test-spec': TestPageTestSpec;
-      'test-request.billing': TestRequestBilling;
       'test-request.client': TestRequestClient;
       'test-request.report': TestRequestReport;
       'test-request.sample': TestRequestSample;

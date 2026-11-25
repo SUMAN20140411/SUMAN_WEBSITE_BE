@@ -60,11 +60,17 @@
       "component": "test-request.client",
       "required": true
     },
-    "billing": {
-      "type": "component",
-      "repeatable": false,
-      "component": "test-request.billing",
-      "required": true
+    "businessRegistrationFile": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "files"]
+    },
+    "applicationFiles": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images", "files"]
     },
     "privacyConsent": {
       "type": "boolean",

@@ -20,6 +20,15 @@
       "type": "string",
       "maxLength": 200
     },
+    "analysisPurpose": {
+      "type": "text",
+      "required": true,
+      "maxLength": 500
+    },
+    "desiredCompletionDate": {
+      "type": "date",
+      "required": true
+    },
     "copyCount": {
       "type": "integer",
       "required": true,
@@ -27,7 +36,7 @@
     },
     "receiveMethod": {
       "type": "enumeration",
-      "enum": ["visit", "mail", "electronic"],
+      "enum": ["visit", "mail", "email"],
       "required": true
     },
     "shippingName": {
@@ -54,15 +63,18 @@
       "type": "string",
       "maxLength": 200
     },
-    "samplePhoto": {
-      "type": "enumeration",
-      "enum": ["attach", "skip"],
-      "required": true
-    },
     "sampleHandling": {
       "type": "enumeration",
       "enum": ["dispose", "return"],
       "required": true
+    },
+    "hasAdditionalAnalysis": {
+      "type": "boolean",
+      "required": true
+    },
+    "additionalAnalysisDetail": {
+      "type": "text",
+      "maxLength": 1000
     }
   },
   "config": {}
