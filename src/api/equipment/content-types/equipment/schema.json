@@ -32,6 +32,24 @@
         }
       },
       "customField": "plugin::cloudinary-media-library.cloudinary"
+    },
+    "description": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "specification": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "test-page.test-spec",
+      "repeatable": true
     }
   }
 }

@@ -841,6 +841,12 @@ export interface ApiEquipmentEquipment extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     img: Schema.Attribute.String &
       Schema.Attribute.CustomField<'plugin::cloudinary-media-library.cloudinary'> &
       Schema.Attribute.SetPluginOptions<{
@@ -861,6 +867,12 @@ export interface ApiEquipmentEquipment extends Struct.CollectionTypeSchema {
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    specification: Schema.Attribute.Component<'test-page.test-spec', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
